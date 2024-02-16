@@ -1,6 +1,7 @@
 import app from "./app.js";
 import { sequelize } from "../database/database.js";
-import "../models/Usuario.js";
+import Usuario from "../models/Usuario.js";
+import usuarioRoutes from "../routes/usuarioRoutes.js"
 
 async function main() {
     try {
@@ -11,6 +12,9 @@ async function main() {
     }catch(error){
         console.log("No se pudo conectar a la base de datos")
     }
+
+
+    app.use("/api/usuarios", usuarioRoutes);
 
 }
 

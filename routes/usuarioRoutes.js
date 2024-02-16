@@ -1,0 +1,19 @@
+import express from "express";
+
+const router = express.Router();
+
+import {
+  registrar,
+  autenticar,
+} from "../controllers/usuarioController.js";
+
+
+import checkAuth from "../middleware/checkAuth.js";
+
+
+// Autenticación, Registro y Confirmación de Usuarios
+router.post("/", registrar); // Crea un nuevo usuario
+router.post("/login", autenticar); // Crea un nuevo usuario
+
+
+export default router;
