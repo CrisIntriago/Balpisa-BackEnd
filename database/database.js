@@ -1,11 +1,11 @@
 import Sequelize from "sequelize";
 
 export const sequelize = new Sequelize(
-    "balpisa-db",
-    "postgres",
-    "root",
+    process.env.DB_NAME,
+    process.env.DB_USER,
+    process.env.DB_PASSWORD,
     {
-        host: "localhost",
-        dialect: "postgres",
+        host: process.env.DB_HOST,
+        dialect: process.env.DB_DIALECT,
     }
 );

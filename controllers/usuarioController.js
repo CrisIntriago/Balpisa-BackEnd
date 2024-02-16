@@ -2,8 +2,9 @@ import Usuario from "../models/Usuario.js";
 import { createHash } from 'crypto';
 import generarJWT from "../helpers/generarJWT.js";
 
+
+//Registra al usuario
 const registrar = async (req, res) => {
-    // Evitar registros duplicados
     const { nombre, contrasena, token } = req.body;
     const existeUsuario = await Usuario.findOne({ where: { nombre } });
 
@@ -30,9 +31,8 @@ const registrar = async (req, res) => {
     }
 };
 
-
+//Confirma que la contraseña y usuario están correctos
 const autenticar = async (req, res) => {
-    // Evitar registros duplicados
     const { nombre, contrasena } = req.body;
     const existeUsuario = await Usuario.findOne({ where: { nombre } });
 
