@@ -38,7 +38,7 @@ const autenticar = async (req, res) => {
 
 
     if (!existeUsuario) {
-        const error = new Error("No existe ese Usuario");
+        const error = new Error("No existe ese Usuario o la contraseña está mal.");
         return res.status(400).json({ msg: error.message });
     } else {
         const idUsuario = existeUsuario.id;
@@ -50,7 +50,9 @@ const autenticar = async (req, res) => {
         if (constrasenaValidar === contrasenaHasheada) {
             res.json(
                 {
-                    token:generarJWT(idUsuario)
+                    id: idUsuario,
+                    nombre: existeUsuario.nombre,
+                    token: generarJWT(idUsuario)
                 });
         } else {
             res.status(500).json({ mensaje: 'No existe ese usuario' });
@@ -58,8 +60,14 @@ const autenticar = async (req, res) => {
     }
 };
 
+const perfil = async (req, res) => {
+
+    res.json(req.usuario);
+
+}
 
 export {
     registrar,
     autenticar,
+    perfil,
 };

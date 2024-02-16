@@ -12,10 +12,16 @@ const checkAuth = async (req, res, next) => {
 
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      req.usuario = await Usuario.findById(decoded.id).select(
-        "-password -confirmado -token -createdAt -updatedAt -__v"
-      );
+      const usuario = await Usuario.findByPk(decoded.id , {
+        attributes:["id","nombre"],
+      });
 
+      req.usuario= {
+        id : usuario.id,
+        nombre: usuario.nombre,
+        token
+      }
+    
       return next();
     } catch (error) {
       return res.status(404).json({ msg: "Hubo un error" });
