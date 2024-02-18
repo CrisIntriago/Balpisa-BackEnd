@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize"
 import { sequelize } from "../database/database.js"
 
 
-const Usuario = sequelize.define("usuarios", {
+const Usuario = sequelize.define("Usuarios", {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -14,9 +14,6 @@ const Usuario = sequelize.define("usuarios", {
     contrasena:{
         type: DataTypes.STRING,
     },
-    token:{
-        type: DataTypes.STRING,
-    }
 }, {
     timestamps:false,
 });
@@ -33,8 +30,5 @@ Usuario.obtenerContrasenaPorId = async function(idUsuario) {
         throw error;
     }
 };
-
-
-
 
 export default Usuario;

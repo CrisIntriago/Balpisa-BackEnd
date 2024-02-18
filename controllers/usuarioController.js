@@ -29,6 +29,7 @@ const registrar = async (req, res) => {
         console.error('Error al registrar usuario:', error);
         res.status(500).json({ mensaje: 'Error al registrar usuario' });
     }
+
 };
 
 //Confirma que la contraseña y usuario están correctos
