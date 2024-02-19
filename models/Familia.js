@@ -10,6 +10,7 @@ const Familia = sequelize.define("Familias", {
     nombre: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
     },
 }, {
     timestamps: false,
