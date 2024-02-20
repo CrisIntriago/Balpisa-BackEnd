@@ -2,9 +2,10 @@ import app from "./app.js";
 import { sequelize } from "../database/database.js";
 import usuarioRoutes from "../routes/usuarioRoutes.js";
 import modeloRoutes from "../routes/modeloRoutes.js";
-import familiaRoutes from "../routes/familiaRoutes.js"
-import planchaRoutes from "../routes/familiaRoutes.js"
-import movimientosRoutes from "../routes/movimientoRoutes.js"
+import familiaRoutes from "../routes/familiaRoutes.js";
+import planchaRoutes from "../routes/familiaRoutes.js";
+import movimientosRoutes from "../routes/movimientoRoutes.js";
+import bodegasRoutes from "../routes/bodegaRoutes.js";
 
 
 async function main() {
@@ -23,6 +24,7 @@ async function main() {
     app.use("/api/familias", familiaRoutes);
     app.use("/api/planchas", planchaRoutes);
     app.use("/api/movimentos", movimientosRoutes);
+    app.use("/api/bodegas", bodegasRoutes);
 }
 
 main();
