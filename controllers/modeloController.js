@@ -8,12 +8,40 @@ const getModelosFromFamilia = async (req, res) => {
 
     // Parameterized query to prevent SQL injection
     const query = `
-        SELECT SUM(planchas.alto * planchas.ancho) AS m2Disponibles, modelos.nombre, modelos.preciom2
-        FROM ((modelos
-        JOIN planchas ON (modelos.id = planchas.ModeloId))
-        JOIN familias ON (familias.id = modelos.FamiliaId))
+        SELECT modelos.id, modelos.nombre 
+        FROM modelos
+        WHERE modelos.FamiliaId = :familiaId;
+    
+    `;
+
+    sequelize.query(query, {
+        replacements: { familiaId }, // Use replacements for parameterized query
+        type: Sequelize.QueryTypes.SELECT // Specify the query type
+    })
+        .then(results => {
+            // Send results as JSON
+            res.status(201).json({ data: results });
+        })
+        .catch(error => {
+            console.error('Error executing raw query:', error);
+            res.status(500).json({ error: 'Error executing raw query' });
+        });
+
+
+}
+
+const getModelosM2FromFamilia = async (req, res) => {
+
+    const { familiaId } = req.body;
+
+    // Parameterized query to prevent SQL injection
+    const query = `
+        SELECT modelos.nombre, SUM(planchas.alto * planchas.ancho) AS m2Disponibles, modelos.preciom2
+        FROM (modelos
+        JOIN (planchas, familias) ON (modelos.id = planchas.ModeloId and familias.id = modelos.FamiliaId))
         WHERE familias.id = :familiaId
-        GROUP BY modelos.nombre, modelos.preciom2;
+        GROUP BY modelos.id;
+    
     `;
 
     sequelize.query(query, {
@@ -119,6 +147,7 @@ export {
     findAll,
     updateModelo,
     deleteModelo,
-    getModelosFromFamilia,
+    getModelosM2FromFamilia,
     allPlanchas,
+    getModelosFromFamilia,
 };

@@ -1,5 +1,5 @@
 import express from "express";
-import { addModelo, findAll, updateModelo, deleteModelo, getModelosFromFamilia, allPlanchas } from "../controllers/modeloController.js";
+import { addModelo, findAll, updateModelo, deleteModelo, getModelosM2FromFamilia, allPlanchas , getModelosFromFamilia} from "../controllers/modeloController.js";
 
 const router = express.Router();
 
@@ -16,7 +16,9 @@ router.put("/:id", updateModelo);
 router.delete("/:id", deleteModelo);
 
 
-router.post("/familia/modelos/", getModelosFromFamilia);
+router.post("/m2Disponibles/", getModelosM2FromFamilia);
+
+router.post("/deFamilia", getModelosFromFamilia);
 
 
 router.get("/allPlanchas", allPlanchas);
