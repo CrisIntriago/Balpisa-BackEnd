@@ -36,7 +36,7 @@ const getModelosM2FromFamilia = async (req, res) => {
 
     // Parameterized query to prevent SQL injection
     const query = `
-        SELECT modelos.nombre, SUM(planchas.alto * planchas.ancho) AS m2Disponibles, modelos.preciom2
+        SELECT modelos.id ,modelos.nombre, SUM(planchas.alto * planchas.ancho) AS m2Disponibles, modelos.preciom2
         FROM (modelos
         JOIN (planchas, familias) ON (modelos.id = planchas.ModeloId and familias.id = modelos.FamiliaId))
         WHERE familias.id = :familiaId
