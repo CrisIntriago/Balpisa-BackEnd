@@ -59,31 +59,25 @@ const getModelosM2FromFamilia = async (req, res) => {
 }
 
 const allPlanchas = async (req, res) => {
-
-    // Suponiendo que tienes variables para ModeloId y BodegaId, por ejemplo:
-    const { modeloId, bodegaId } = req.body;
+    // Utiliza req.query en lugar de req.body
+    const { modeloId, bodegaId } = req.query;
 
     const query = `
     SELECT id , nombre,alto,ancho,despunte1A,despunte1B,despunte2A, despunte2B, despunte3A, despunte3B FROM Planchas WHERE ModeloId = :modeloId AND BodegaId = :bodegaId;
 `;
 
     sequelize.query(query, {
-        replacements: { modeloId, bodegaId }, // Utiliza reemplazos para la consulta parametrizada
-        type: Sequelize.QueryTypes.SELECT // Especifica el tipo de consulta
+        replacements: { modeloId, bodegaId },
+        type: Sequelize.QueryTypes.SELECT
     })
         .then(results => {
-            // Envía los resultados como JSON
             res.status(200).json({ data: results });
         })
         .catch(error => {
             console.error('Error al ejecutar la consulta:', error);
             res.status(500).json({ error: 'Error al ejecutar la consulta' });
         });
-
-
-
-
-}
+};
 
 // Create a new modelo
 const addModelo = async (req, res) => {
