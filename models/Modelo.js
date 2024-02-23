@@ -14,6 +14,9 @@ const Modelo = sequelize.define("Modelos", {
     preciom2: {
         type: DataTypes.DECIMAL(10, 2),
     },
+    CodigoContable: {
+        type: DataTypes.STRING,
+    },
 }, {
     timestamps: false,
 });

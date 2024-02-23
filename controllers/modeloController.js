@@ -8,9 +8,9 @@ const getModelosFromFamilia = async (req, res) => {
 
     // Parameterized query to prevent SQL injection
     const query = `
-        SELECT modelos.id, modelos.nombre 
-        FROM modelos
-        WHERE modelos.FamiliaId = :familiaId;
+        SELECT  Modelos.id, Modelos.nombre 
+        FROM Modelos
+        WHERE Modelos.FamiliaId = :familiaId;
     
     `;
 
@@ -36,11 +36,11 @@ const getModelosM2FromFamilia = async (req, res) => {
 
     // Parameterized query to prevent SQL injection
     const query = `
-        SELECT modelos.nombre, SUM(planchas.alto * planchas.ancho) AS m2Disponibles, modelos.preciom2
-        FROM (modelos
-        JOIN (planchas, familias) ON (modelos.id = planchas.ModeloId and familias.id = modelos.FamiliaId))
-        WHERE familias.id = :familiaId
-        GROUP BY modelos.id;
+        SELECT Modelos.nombre, SUM(Planchas.alto * Planchas.ancho) AS m2Disponibles, Modelos.preciom2
+        FROM (Modelos
+        JOIN (Planchas, Familias) ON (Modelos.id = Planchas.ModeloId and Familias.id = Modelos.FamiliaId))
+        WHERE Familias.id = :familiaId
+        GROUP BY Modelos.id;
     
     `;
 
@@ -64,7 +64,7 @@ const allPlanchas = async (req, res) => {
     const { modeloId, bodegaId } = req.body;
 
     const query = `
-    SELECT * FROM planchas WHERE ModeloId = :modeloId AND BodegaId = :bodegaId;
+    SELECT * FROM Planchas WHERE ModeloId = :modeloId AND BodegaId = :bodegaId;
 `;
 
     sequelize.query(query, {

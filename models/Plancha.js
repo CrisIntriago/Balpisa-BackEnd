@@ -12,10 +12,38 @@ const Plancha = sequelize.define("Planchas", {
         type: DataTypes.STRING,
     },
     alto: {
-        type: DataTypes.DECIMAL(10, 2),
+        type: DataTypes.DECIMAL(3, 2),
     },
     ancho: {
-        type: DataTypes.DECIMAL(10, 2),
+        type: DataTypes.DECIMAL(3, 2),
+    },
+    despunte1A: {
+        type: DataTypes.DECIMAL(3, 2),
+        defaultValue: 0.00,
+    },
+    despunte1B: {
+        type: DataTypes.DECIMAL(3, 2),
+        defaultValue: 0.00,
+    },
+    despunte2A: {
+        type: DataTypes.DECIMAL(3, 2),
+        defaultValue: 0.00,
+    },
+    despunte2B: {
+        type: DataTypes.DECIMAL(3, 2),
+        defaultValue: 0.00,
+    },
+    despunte3A: {
+        type: DataTypes.DECIMAL(3, 2),
+        defaultValue: 0.00,
+    },
+    despunte3B: {
+        type: DataTypes.DECIMAL(3, 2),
+        defaultValue: 0.00,
+    },
+    estado: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
     },
 }, {
     timestamps: false,
