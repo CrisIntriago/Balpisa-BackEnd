@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize"
 import { sequelize } from "../database/database.js"
 
 
-const Plancha = sequelize.define("Planchas", {
+const Plancha = sequelize.define("planchas", {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,

@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize"
 import { sequelize } from "../database/database.js"
 
-const Familia = sequelize.define("Familias", {
+const Familia = sequelize.define("familias", {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,

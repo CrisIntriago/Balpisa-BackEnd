@@ -3,7 +3,7 @@ import Plancha from "../models/Relaciones";
 // Create a new plancha
 const addPlancha = async (req, res) => {
     try {
-        const { nombre, alto, ancho } = req.body;
+        const { nombre, alto, ancho} = req.body;
         const nuevaPlancha = await Plancha.create({ nombre, alto, ancho });
         res.status(201).json(nuevaPlancha);
     } catch (error) {
