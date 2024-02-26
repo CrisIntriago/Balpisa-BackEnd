@@ -1,5 +1,33 @@
 import {Plancha} from "../models/Relaciones.js";
 
+const getPlanchaIdNombre = async (req, res) => {
+
+    const { modeloId } = req.params;
+
+    // Parameterized query to prevent SQL injection
+    const query = `
+        SELECT * FROM planchas WHERE modeloId=:modeloId;
+    
+    `;
+
+    sequelize.query(query, {
+        replacements: { familiaId }, // Use replacements for parameterized query
+        type: Sequelize.QueryTypes.SELECT // Specify the query type
+    })
+        .then(results => {
+            // Send results as JSON
+            res.status(201).json({ data: results });
+        })
+        .catch(error => {
+            console.error('Error executing raw query:', error);
+            res.status(500).json({ error: 'Error executing raw query' });
+        });
+
+
+}
+
+
+
 // Create a new plancha
 const addPlancha = async (req, res) => {
     try {
@@ -80,5 +108,6 @@ export {
     findAll,
     updatePlancha,
     deletePlancha,
-    getPlancha
+    getPlancha,
+    getPlanchaIdNombre
 };
