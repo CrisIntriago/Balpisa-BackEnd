@@ -7,7 +7,7 @@ const router = express.Router();
 router.get("/:id", getPlancha);
 
 // obtener id y nombre según Modelo
-router.get("/idNombre/:id", getPlanchasIdNombre);
+router.get("/idNombre/:id", getPlanchaIdNombre);
 
 // Update a plancha by ID
 router.put("/:id", updatePlancha);

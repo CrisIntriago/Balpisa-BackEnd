@@ -7,9 +7,6 @@ const Movimiento = sequelize.define("movimientos", {
         primaryKey: true,
         autoIncrement: true,
     },
-    nombre: {
-        type: DataTypes.STRING,
-    },
     nFactura: {
         type: DataTypes.STRING,
     },
