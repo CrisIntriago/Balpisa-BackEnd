@@ -15,10 +15,10 @@ const addFamilia = async (req, res) => {
 
 // Get all familias
 const findAll = async (req, res) => {
+    console.log("Este endpoint está siendo llamado");
     try {
         // Retrieve all instances of the Familia model
         const familias = await Familia.findAll();
-        console.log(familias)
         res.json(familias);
     } catch (error) {
         console.error("Error al obtener las familias:", error);

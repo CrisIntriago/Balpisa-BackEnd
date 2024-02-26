@@ -1,9 +1,9 @@
-import Plancha from "../models/Relaciones";
+import {Plancha} from "../models/Relaciones.js";
 
 // Create a new plancha
 const addPlancha = async (req, res) => {
     try {
-        const { nombre, alto, ancho} = req.body;
+        const { nombre, alto, ancho } = req.body;
         const nuevaPlancha = await Plancha.create({ nombre, alto, ancho });
         res.status(201).json(nuevaPlancha);
     } catch (error) {
@@ -23,6 +23,23 @@ const findAll = async (req, res) => {
     }
 }
 
+// Get single plancha
+const getPlancha = async (req, res) => {
+    console.log("thehell")
+    try {
+        const { id } = req.params;
+        const plancha = await Plancha.findByPk(id);
+        if (!plancha) {
+            return res.status(404).json({ error: "Plancha no encontrada" });
+        }
+
+        res.json(plancha);
+    } catch (error) {
+        console.error("Error al actualizar la plancha:", error);
+        res.status(500).json({ error: "Error al actualizar la plancha en la base de datos" });
+    }
+};
+
 // Update a plancha by ID
 const updatePlancha = async (req, res) => {
     try {
@@ -41,7 +58,7 @@ const updatePlancha = async (req, res) => {
         console.error("Error al actualizar la plancha:", error);
         res.status(500).json({ error: "Error al actualizar la plancha en la base de datos" });
     }
-}
+};
 
 // Delete a plancha by ID
 const deletePlancha = async (req, res) => {
@@ -62,5 +79,6 @@ export {
     addPlancha,
     findAll,
     updatePlancha,
-    deletePlancha
+    deletePlancha,
+    getPlancha
 };

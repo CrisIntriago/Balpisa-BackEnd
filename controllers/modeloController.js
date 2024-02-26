@@ -59,11 +59,10 @@ const getModelosM2FromFamilia = async (req, res) => {
 }
 
 const allPlanchas = async (req, res) => {
-    // Utiliza req.query en lugar de req.body
     const { modeloId, bodegaId } = req.query;
 
     const query = `
-    SELECT id , nombre,alto,ancho,despunte1A,despunte1B,despunte2A, despunte2B, despunte3A, despunte3B FROM Planchas WHERE ModeloId = :modeloId AND BodegaId = :bodegaId;
+    SELECT id , nombre,alto,ancho,despunte1A,despunte1B,despunte2A, despunte2B, despunte3A, despunte3B FROM planchas WHERE ModeloId = :modeloId AND BodegaId = :bodegaId;
 `;
 
     sequelize.query(query, {
