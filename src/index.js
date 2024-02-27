@@ -9,7 +9,7 @@ import { sequelize } from "../database/database.js";
 
 async function main() {
     try {
-        await sequelize.sync({alter : true});
+        // await sequelize.sync({alter : true});
         console.log("La conexión a la base de datos se ha ejecutado correctamente");
         app.listen(4000);
         console.log("Server is listening on", 4000)
