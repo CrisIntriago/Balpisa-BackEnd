@@ -4,7 +4,7 @@ import { Sequelize } from "sequelize";
 
 const getIdNombres = async (req, res) => {
 
-    const { modeloId, bodegaId } = req.body;
+    const { modeloId, bodegaId } = req.query;
 
     // Parameterized query to prevent SQL injection
     const query = `
