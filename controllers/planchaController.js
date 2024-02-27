@@ -58,8 +58,8 @@ const gastarPlancha = async (req, res) => {
 // Create a new plancha
 const addPlancha = async (req, res) => {
     try {
-        const { nombre, alto, ancho } = req.body;
-        const nuevaPlancha = await Plancha.create({ nombre, alto, ancho });
+        const { nombre, alto, ancho, despunte1A,despunte1B,despunte2A,despunte2B,despunte3A,despunte3B,modeloId,bodegaId } = req.body;
+        const nuevaPlancha = await Plancha.create({ nombre, alto, ancho, despunte1A,despunte1B,despunte2A,despunte2B,despunte3A,despunte3B,modeloId,bodegaId});
         res.status(201).json(nuevaPlancha);
     } catch (error) {
         console.error("Error al crear la plancha:", error);
