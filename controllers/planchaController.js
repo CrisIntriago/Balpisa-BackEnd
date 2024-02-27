@@ -46,6 +46,8 @@ const gastarPlancha = async (req, res) => {
         plancha.despunte2B = 0;
         plancha.despunte3A = 0;
         plancha.despunte3B = 0;
+        plancha.estado = 0;
+        await plancha.save();
         res.json(plancha);
     } catch (error) {
         console.error("Error al actualizar la plancha:", error);
