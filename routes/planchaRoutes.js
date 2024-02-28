@@ -1,5 +1,5 @@
 import express from "express";
-import { addPlancha, findAll, updatePlancha, deletePlancha, getPlancha,getIdNombres,gastarPlancha } from "../controllers/planchaController.js";
+import { addPlancha, findAll, updatePlancha, deletePlancha, getPlancha,getIdNombres,gastarPlancha, cambioBodega } from "../controllers/planchaController.js";
 
 const router = express.Router();
 
@@ -14,6 +14,9 @@ router.put("/:id", updatePlancha);
 
 //Gastar plancha
 router.put("/gastarPlancha/:id", gastarPlancha);
+
+//Cambio de Bodega
+router.put("/cambioBodega/datos", cambioBodega);
 
 
 // Delete a plancha by ID

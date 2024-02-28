@@ -1,10 +1,11 @@
-import {Movimiento} from "../models/Relaciones.js";
-
+import { Movimiento } from "../models/Relaciones.js";
+import { sequelize } from "../database/database.js";
+import { Sequelize } from "sequelize";
 // Create a new movimiento
 const addMovimiento = async (req, res) => {
     try {
-        const { valorRegistro, planchaId,nFactura,precioVenta } = req.body;
-        const nuevoMovimiento = await Movimiento.create({ valorRegistro, planchaId,nFactura,precioVenta });
+        const { valorRegistro, planchaId, nFactura, precioVenta, tipo } = req.body;
+        const nuevoMovimiento = await Movimiento.create({ valorRegistro, planchaId, nFactura, precioVenta, tipo });
         res.status(201).json(nuevoMovimiento);
     } catch (error) {
         console.error("Error al crear el movimiento:", error);
@@ -56,10 +57,34 @@ const deleteMovimiento = async (req, res) => {
         res.status(500).json({ error: "Error al eliminar el movimiento de la base de datos" });
     }
 }
+const movimientosEnFecha = async (req, res) => {
+    const { fechaInicio, fechaFin } = req.body;
+
+    // Parameterized query to prevent SQL injection
+    const query = `
+        SELECT *
+        FROM movimientos
+        WHERE createdAt BETWEEN :fechaInicio AND :fechaFin;
+    `;
+
+    sequelize.query(query, {
+        replacements: { fechaInicio: fechaInicio + ' 00:00:00', fechaFin: fechaFin + ' 23:59:59' }, // Use replacements for parameterized query
+        type: Sequelize.QueryTypes.SELECT // Specify the query type
+    })
+        .then(results => {
+            // Send results as JSON
+            res.status(201).json({ data: results });
+        })
+        .catch(error => {
+            console.error('Error executing raw query:', error);
+            res.status(500).json({ error: 'Error executing raw query' });
+        });
+}
 
 export {
     addMovimiento,
     findAllMovimientos,
     updateMovimiento,
-    deleteMovimiento
+    deleteMovimiento,
+    movimientosEnFecha,
 };
