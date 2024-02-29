@@ -62,7 +62,7 @@ const allPlanchas = async (req, res) => {
     const { modeloId, bodegaId } = req.query;
 
     const query = `
-    SELECT id , nombre,alto,ancho,despunte1A,despunte1B,despunte2A, despunte2B, despunte3A, despunte3B FROM planchas WHERE ModeloId = :modeloId AND BodegaId = :bodegaId;
+    SELECT id , nombre,alto,ancho,despunte1A,despunte1B,despunte2A, despunte2B, despunte3A, despunte3B, estado FROM planchas WHERE ModeloId = :modeloId AND BodegaId = :bodegaId;
 `;
 
     sequelize.query(query, {

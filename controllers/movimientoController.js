@@ -3,8 +3,8 @@ import {Movimiento} from "../models/Relaciones.js";
 // Create a new movimiento
 const addMovimiento = async (req, res) => {
     try {
-        const { valorRegistro, planchaId,nFactura,precioVenta } = req.body;
-        const nuevoMovimiento = await Movimiento.create({ valorRegistro, planchaId,nFactura,precioVenta });
+        const { valorRegistro, planchaId,nFactura,precioVenta, tipo } = req.body;
+        const nuevoMovimiento = await Movimiento.create({ valorRegistro, planchaId,nFactura,precioVenta, tipo });
         res.status(201).json(nuevoMovimiento);
     } catch (error) {
         console.error("Error al crear el movimiento:", error);
