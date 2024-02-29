@@ -8,9 +8,9 @@ const getModelosFromFamilia = async (req, res) => {
 
     // Parameterized query to prevent SQL injection
     const query = `
-        SELECT  Modelos.id, Modelos.nombre 
-        FROM Modelos
-        WHERE Modelos.FamiliaId = :familiaId;
+        SELECT  modelos.id, modelos.nombre 
+        FROM modelos
+        WHERE modelos.FamiliaId = :familiaId;
     
     `;
 
@@ -62,7 +62,7 @@ const allPlanchas = async (req, res) => {
     const { modeloId, bodegaId } = req.query;
 
     const query = `
-    SELECT id , nombre,alto,ancho,despunte1A,despunte1B,despunte2A, despunte2B, despunte3A, despunte3B, estado FROM planchas WHERE ModeloId = :modeloId AND BodegaId = :bodegaId;
+    SELECT id , nombre,alto,ancho,despunte1A,despunte1B,despunte2A, despunte2B, despunte3A, despunte3B, estado FROM planchas WHERE modeloId = :modeloId AND bodegaId = :bodegaId;
 `;
 
     sequelize.query(query, {

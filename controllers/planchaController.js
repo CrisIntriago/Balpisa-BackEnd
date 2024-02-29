@@ -2,6 +2,33 @@ import { Plancha } from "../models/Relaciones.js";
 import { sequelize } from "../database/database.js";
 import { Sequelize } from "sequelize";
 
+const cambioBodega = async (req, res) => {
+    const { idPlancha, idBodega } = req.query;
+
+    try {
+        const plancha = await Plancha.findByPk(idPlancha);
+
+        if (plancha) {
+            await Plancha.update(
+                { bodegaId: idBodega },
+                { where: { id: idPlancha } }
+            );
+
+            // Enviar la respuesta JSON con la plancha actualizada
+            res.json({ success: true, message: `Se actualizó la plancha con ID ${idPlancha} con bodegaId ${idBodega}.`});
+        } else {
+            // Si no se encontró la plancha, enviar un mensaje de error
+            res.status(404).json({ success: false, message: `No se encontró ninguna plancha con ID ${idPlancha}.` });
+        }
+    } catch (error) {
+        // Manejar errores
+        console.error('Error al actualizar la plancha:', error);
+        res.status(500).json({ success: false, message: 'Error al actualizar la plancha.' });
+    }
+};
+
+
+
 const getIdNombres = async (req, res) => {
 
     const { modeloId, bodegaId } = req.query;
@@ -60,8 +87,8 @@ const gastarPlancha = async (req, res) => {
 // Create a new plancha
 const addPlancha = async (req, res) => {
     try {
-        const { nombre, alto, ancho, despunte1A,despunte1B,despunte2A,despunte2B,despunte3A,despunte3B,modeloId,bodegaId } = req.body;
-        const nuevaPlancha = await Plancha.create({ nombre, alto, ancho, despunte1A,despunte1B,despunte2A,despunte2B,despunte3A,despunte3B,modeloId,bodegaId});
+        const { nombre, alto, ancho, despunte1A, despunte1B, despunte2A, despunte2B, despunte3A, despunte3B, modeloId, bodegaId } = req.body;
+        const nuevaPlancha = await Plancha.create({ nombre, alto, ancho, despunte1A, despunte1B, despunte2A, despunte2B, despunte3A, despunte3B, modeloId, bodegaId });
         res.status(201).json(nuevaPlancha);
     } catch (error) {
         console.error("Error al crear la plancha:", error);
@@ -82,7 +109,7 @@ const findAll = async (req, res) => {
 
 // Get single plancha
 const getPlancha = async (req, res) => {
-    const {id} = req.params;
+    const { id } = req.params;
 
     // Parameterized query to prevent SQL injection
     const query = `
@@ -93,7 +120,7 @@ const getPlancha = async (req, res) => {
     `;
 
     sequelize.query(query, {
-        replacements: {id}, // Use replacements for parameterized query
+        replacements: { id }, // Use replacements for parameterized query
         type: Sequelize.QueryTypes.SELECT // Specify the query type
     })
         .then(results => {
@@ -156,5 +183,6 @@ export {
     deletePlancha,
     getPlancha,
     getIdNombres,
-    gastarPlancha
+    gastarPlancha,
+    cambioBodega
 };
