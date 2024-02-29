@@ -14,7 +14,7 @@ const whitelist = [process.env.FRONTEND_URL , "190.154.6.1"];
 
 const corsOptions = {
 
-    /*
+    
     origin: function (origin, callback) {
         if (whitelist.includes(origin)) {
             // Puede consultar la API
@@ -24,9 +24,9 @@ const corsOptions = {
             callback(new Error("Error de Cors"));
         }
     },
-    */
+    
 
-    origin:"*"
+    //origin:"*"
 };
 
 app.use(cors(corsOptions));
