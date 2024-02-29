@@ -16,7 +16,6 @@ Thumbs.db
 /build/Release
 
 # Dependency lock files
-package-lock.json
 npm-debug.log
 yarn-error.log
 
