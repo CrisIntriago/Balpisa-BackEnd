@@ -7,12 +7,9 @@ const MovimientoUnitario = sequelize.define("movimientoUnitario", {
         primaryKey: true,
         autoIncrement: true,
     },
-    nombre: {
-        type: DataTypes.STRING,
-    },
     tipo: {
         type: DataTypes.ENUM,
-        values: ["Ingreso", "Salida", "CambioBodega","Desperfecto"],
+        values: ["Ingreso", "Salida","Desperfecto"],
     },
     cantidadCambiada: {
         type: DataTypes.INTEGER,

@@ -19,6 +19,9 @@ const ModeloUnitario = sequelize.define("modeloUnitario", {
     codContable: {
         type: DataTypes.STRING,
     },
+    m2PorUnidad: {
+        type: DataTypes.DECIMAL(3,2),
+    },
 }, {
     timestamps: false,
 });
