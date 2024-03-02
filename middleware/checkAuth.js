@@ -10,20 +10,27 @@ const checkAuth = async (req, res, next) => {
     try {
       token = req.headers.authorization.split(" ")[1];
 
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const decoded = jwt.verify(JSON.parse(token), process.env.JWT_SECRET, { algorithm: "HS256" });
 
-      const usuario = await Usuario.findByPk(decoded.id , {
-        attributes:["id","nombre"],
+
+
+      const usuario = await Usuario.findByPk(decoded.id, {
+        attributes: ["id", "nombre"],
       });
 
-      req.usuario= {
-        id : usuario.id,
+
+
+      req.usuario = {
+        id: usuario.id,
         nombre: usuario.nombre,
         token
       }
-    
+      
+
       return next();
+
     } catch (error) {
+
       return res.status(404).json({ msg: "Hubo un error" });
     }
   }
