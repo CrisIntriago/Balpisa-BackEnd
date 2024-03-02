@@ -5,6 +5,9 @@ import familiaRoutes from "../routes/familiaRoutes.js";
 import planchaRoutes from "../routes/planchaRoutes.js";
 import movimientosRoutes from "../routes/movimientoRoutes.js";
 import bodegasRoutes from "../routes/bodegaRoutes.js";
+import modeloUnitarioRoutes from "../routes/modeloUnitarioRoutes.js"
+import MovimientoUnitarioRoutes from "../models/MovimientoUnitario.js";
+
 import { sequelize } from "../database/database.js";
 
 async function main() {
@@ -23,6 +26,8 @@ async function main() {
     app.use("/api/bodegas", bodegasRoutes);
     app.use("/api/familias", familiaRoutes);
     app.use("/api/usuarios", usuarioRoutes);
+    app.use("/api/modelos/unitarios", modeloUnitarioRoutes);
+    app.use("/api/movimientos/unitarios", modeloUnitarioRoutes);
 }
 
 main();

@@ -32,5 +32,7 @@ export{
     Modelo,
     Bodega,
     Plancha,
-    Movimiento
+    Movimiento,
+    ModeloUnitario,
+    MovimientoUnitario,
 }
