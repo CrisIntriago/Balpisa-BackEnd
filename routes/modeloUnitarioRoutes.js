@@ -1,11 +1,10 @@
 import express from "express";
-import { getModelosM2FromFamilia , getModelosFromFamilia} from "../controllers/modeloUnitarioController.js";
+import { getModelosM2FromFamilia, getModelosFromFamilia, incrementarCantidad, decrementarCantidad } from "../controllers/modeloUnitarioController.js";
 
 const router = express.Router();
 
 
 /*
-// Create a new modelo
 router.post("/", addModelo);
 
 // Get all modelos
@@ -22,6 +21,9 @@ router.delete("/:id", deleteModelo);
 router.post("/m2Disponibles", getModelosM2FromFamilia);
 
 router.post("/deFamilia", getModelosFromFamilia);
+
+router.patch("/operacion/:id/incrementar/:cantidad", incrementarCantidad);
+router.patch("/operacion/:id/decrementar/:cantidad", decrementarCantidad);
 
 
 export default router;
