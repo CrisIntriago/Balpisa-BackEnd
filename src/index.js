@@ -6,12 +6,13 @@ import planchaRoutes from "../routes/planchaRoutes.js";
 import movimientosRoutes from "../routes/movimientoRoutes.js";
 import bodegasRoutes from "../routes/bodegaRoutes.js";
 import modeloUnitarioRoutes from "../routes/modeloUnitarioRoutes.js"
+import MovimientoUnitarioRoutes from "../models/MovimientoUnitario.js";
 
 import { sequelize } from "../database/database.js";
 
 async function main() {
     try {
-        //await sequelize.sync({alter : true});
+        await sequelize.sync({alter : true});
         console.log("La conexión a la base de datos se ha ejecutado correctamente");
         app.listen(4000);
         console.log("Server is listening on", 4000)
@@ -26,6 +27,7 @@ async function main() {
     app.use("/api/familias", familiaRoutes);
     app.use("/api/usuarios", usuarioRoutes);
     app.use("/api/modelos/unitarios", modeloUnitarioRoutes);
+    app.use("/api/movimientos/unitarios", modeloUnitarioRoutes);
 }
 
 main();

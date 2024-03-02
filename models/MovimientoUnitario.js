@@ -17,6 +17,9 @@ const MovimientoUnitario = sequelize.define("movimientoUnitario", {
     nFactura: {
         type: DataTypes.INTEGER,
     },
+    precioVenta: {
+        type: DataTypes.DECIMAL(7, 5),
+    },
 }, {
     timestamps: true,
 });
