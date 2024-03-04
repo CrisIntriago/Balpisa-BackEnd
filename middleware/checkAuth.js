@@ -18,8 +18,6 @@ const checkAuth = async (req, res, next) => {
         attributes: ["id", "nombre"],
       });
 
-
-
       req.usuario = {
         id: usuario.id,
         nombre: usuario.nombre,

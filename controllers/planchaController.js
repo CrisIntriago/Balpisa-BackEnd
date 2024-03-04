@@ -54,6 +54,31 @@ const getIdNombres = async (req, res) => {
 
 
 };
+const getIdNombresDisponibles = async (req, res) => {
+
+    const { modeloId, bodegaId, estado } = req.query;
+
+    // Parameterized query to prevent SQL injection
+    const query = `
+        SELECT id,nombre FROM planchas WHERE modeloId=:modeloId and bodegaId=:bodegaId and estado = 1;
+    
+    `;
+
+    sequelize.query(query, {
+        replacements: { modeloId, bodegaId , estado}, // Use replacements for parameterized query
+        type: Sequelize.QueryTypes.SELECT // Specify the query type
+    })
+        .then(results => {
+            // Send results as JSON
+            res.status(201).json({ data: results });
+        })
+        .catch(error => {
+            console.error('Error executing raw query:', error);
+            res.status(500).json({ error: 'Error executing raw query' });
+        });
+
+
+};
 
 
 const gastarPlancha = async (req, res) => {
@@ -184,5 +209,6 @@ export {
     getPlancha,
     getIdNombres,
     gastarPlancha,
-    cambioBodega
+    cambioBodega,
+    getIdNombresDisponibles
 };

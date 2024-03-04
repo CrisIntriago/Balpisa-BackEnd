@@ -15,10 +15,10 @@ const MovimientoUnitario = sequelize.define("movimientoUnitario", {
         type: DataTypes.INTEGER,
     },
     nFactura: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
     },
     precioVenta: {
-        type: DataTypes.DECIMAL(7, 5),
+        type: DataTypes.DECIMAL(7, 2),
     },
 }, {
     timestamps: true,

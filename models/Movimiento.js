@@ -15,7 +15,7 @@ const Movimiento = sequelize.define("movimientos", {
         values: ["Ingreso", "Salida", "CambioBodega","Desperfecto"], // Replace 'value1', 'value2', 'value3' with your enum values
     },
     precioVenta: {
-        type: DataTypes.DECIMAL(7, 5),
+        type: DataTypes.DECIMAL(7, 2),
     },
     valorRegistro: {
         type: DataTypes.STRING,
