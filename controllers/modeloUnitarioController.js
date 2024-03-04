@@ -2,6 +2,33 @@ import { ModeloUnitario } from "../models/Relaciones.js";
 import { sequelize } from "../database/database.js";
 import Sequelize from "sequelize";
 
+
+const getModeloUnitarioById = async (req, res) => {
+
+    const { id } = req.params;
+
+    // Parameterized query to prevent SQL injection
+    const query = `
+    SELECT id, precio, m2PorUnidad FROM modelounitarios WHERE id = :id;
+    `;
+
+    sequelize.query(query, {
+        replacements: { id }, // Use replacements for parameterized query
+        type: Sequelize.QueryTypes.SELECT // Specify the query type
+    })
+        .then(results => {
+            // Send results as JSON
+            res.status(201).json({ data: results });
+        })
+        .catch(error => {
+            console.error('Error executing raw query:', error);
+            res.status(500).json({ error: 'Error executing raw query' });
+        });
+
+}
+
+
+
 const getModelosFromFamilia = async (req, res) => {
 
     const { familiaId } = req.body;
@@ -164,5 +191,6 @@ export {
     getModelosM2FromFamilia,
     getModelosFromFamilia,
     incrementarCantidad,
-    decrementarCantidad
+    decrementarCantidad,
+    getModeloUnitarioById
 };

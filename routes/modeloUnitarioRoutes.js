@@ -1,14 +1,14 @@
 import express from "express";
-import { getModelosM2FromFamilia, getModelosFromFamilia, incrementarCantidad, decrementarCantidad } from "../controllers/modeloUnitarioController.js";
+import { getModelosM2FromFamilia, getModelosFromFamilia, incrementarCantidad, decrementarCantidad, getModeloUnitarioById } from "../controllers/modeloUnitarioController.js";
 
 const router = express.Router();
 
 
 /*
 router.post("/", addModelo);
-
-// Get all modelos
-router.get("/", findAll);
+*/
+router.get("/:id", getModeloUnitarioById);
+/*
 
 // Update a modelo by ID
 router.put("/:id", updateModelo);
