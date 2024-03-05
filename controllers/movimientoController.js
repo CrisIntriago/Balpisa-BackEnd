@@ -58,7 +58,7 @@ const deleteMovimiento = async (req, res) => {
     }
 }
 const movimientosEnFecha = async (req, res) => {
-    const { fechaInicio, fechaFin } = req.body;
+    const { fechaInicio, fechaFin , offset} = req.body;
 
     // Parameterized query to prevent SQL injection
     const query = `
@@ -67,11 +67,12 @@ const movimientosEnFecha = async (req, res) => {
         JOIN modelos as mo ON (mo.id = p.modeloId)
         JOIN familias as f ON( mo.familiaId = f.id)
         JOIN bodegas as b ON (b.id = p.bodegaId)
-        WHERE mov.createdAt BETWEEN :fechaInicio AND :fechaFin;
+        WHERE mov.createdAt BETWEEN :fechaInicio AND :fechaFin
+        LIMIT 25 OFFSET :offset;
     `;
 
     sequelize.query(query, {
-        replacements: { fechaInicio: fechaInicio + ' 00:00:00', fechaFin: fechaFin + ' 23:59:59' }, // Use replacements for parameterized query
+        replacements: { fechaInicio: fechaInicio + ' 00:00:00', fechaFin: fechaFin + ' 23:59:59' , offset}, // Use replacements for parameterized query
         type: Sequelize.QueryTypes.SELECT // Specify the query type
     })
         .then(results => {

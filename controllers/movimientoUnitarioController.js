@@ -22,18 +22,19 @@ const findAllMovimientos = async (req, res) => {
 };
 
 const movimientosEnFecha = async (req, res) => {
-    const { fechaInicio, fechaFin } = req.body;
+    const { fechaInicio, fechaFin, offset } = req.body;
 
     // Parameterized query to prevent SQL injection
     const query = `
         SELECT movu.tipo, modu.nombre, modu.codContable, movu.cantidadCambiada, movu.valorRegistro, movu.nFactura
         FROM movimientounitarios AS movu
         JOIN modelounitarios AS modu ON (movu.modeloUnitarioId = modu.id)
-        WHERE movu.createdAt BETWEEN :fechaInicio AND :fechaFin;
+        WHERE movu.createdAt BETWEEN :fechaInicio AND :fechaFin
+        LIMIT 25 OFFSET :offset;
     `;
 
     sequelize.query(query, {
-        replacements: { fechaInicio: fechaInicio + ' 00:00:00', fechaFin: fechaFin + ' 23:59:59' }, // Use replacements for parameterized query
+        replacements: { fechaInicio: fechaInicio + ' 00:00:00', fechaFin: fechaFin + ' 23:59:59', offset }, // Use replacements for parameterized query
         type: Sequelize.QueryTypes.SELECT // Specify the query type
     })
         .then(results => {
