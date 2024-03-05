@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize"
 import { sequelize } from "../database/database.js"
 
-const MovimientoUnitario = sequelize.define("movimientoUnitario", {
+const MovimientoUnitario = sequelize.define("movimientounitarios", {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,

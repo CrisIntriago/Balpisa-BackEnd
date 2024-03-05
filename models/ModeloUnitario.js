@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize"
 import { sequelize } from "../database/database.js"
 
-const ModeloUnitario = sequelize.define("modeloUnitario", {
+const ModeloUnitario = sequelize.define("modelounitarios", {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
