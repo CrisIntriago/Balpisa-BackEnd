@@ -1,6 +1,18 @@
 import { Movimiento } from "../models/Relaciones.js";
 import { sequelize } from "../database/database.js";
 import { Sequelize } from "sequelize";
+
+const nFilas = async (req, res) => {
+    try {
+        // Contar el número de filas en la tabla
+        const count = await Movimiento.count();
+        res.status(201).send({"nFilas" : count});
+    } catch (error) {
+        res.status(500).send({ message: "Error al contar número de filas", error: error.message });
+    }
+}
+
+
 // Create a new movimiento
 const addMovimiento = async (req, res) => {
   try {
@@ -103,9 +115,10 @@ const movimientosEnFecha = async (req, res) => {
 };
 
 export {
-  addMovimiento,
-  findAllMovimientos,
-  updateMovimiento,
-  deleteMovimiento,
-  movimientosEnFecha,
+    addMovimiento,
+    findAllMovimientos,
+    updateMovimiento,
+    deleteMovimiento,
+    movimientosEnFecha,
+    nFilas
 };

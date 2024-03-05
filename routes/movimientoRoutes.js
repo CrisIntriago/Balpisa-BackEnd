@@ -1,5 +1,5 @@
 import express from "express";
-import { addMovimiento, findAllMovimientos, updateMovimiento, deleteMovimiento, movimientosEnFecha } from "../controllers/movimientoController.js";
+import { addMovimiento, findAllMovimientos, updateMovimiento, deleteMovimiento, movimientosEnFecha , nFilas} from "../controllers/movimientoController.js";
 
 const router = express.Router();
 
@@ -18,5 +18,7 @@ router.delete("/:id", deleteMovimiento);
 // Obtener todos los movimientos en un rango de fecha
 
 router.post("/movimientosEnFecha", movimientosEnFecha)
+
+router.get("/nFilas", nFilas)
 
 export default router;
