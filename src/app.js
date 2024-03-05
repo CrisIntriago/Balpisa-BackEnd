@@ -14,7 +14,7 @@ const whitelist = [process.env.FRONTEND_URL , "190.154.6.111", "159.203.190.84"]
 
 const corsOptions = {
 
-    
+    /*
     origin: function (origin, callback) {
         try {
             console.log('Origen:', origin); // Imprime el origen en la consola
@@ -29,10 +29,13 @@ const corsOptions = {
             console.error('Error:', error.message); // Imprime el error en la consola
             callback(error);
         }
-    }
+    }*/
+    
+    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'PUT', 'OPTIONS'], // Asegúrate de incluir 'PATCH' aquí
+    allowedHeaders: ['Content-Type', 'Authorization'],
     
     
-    //origin:"*"
+    origin:"*"
 };
 
 app.use(cors(corsOptions));
