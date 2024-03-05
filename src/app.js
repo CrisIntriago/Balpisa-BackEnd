@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 
-const whitelist = [process.env.FRONTEND_URL , "190.154.6.1"];
+const whitelist = [process.env.FRONTEND_URL , "190.154.6.111", "159.203.190.84"];
 
 const corsOptions = {
 
