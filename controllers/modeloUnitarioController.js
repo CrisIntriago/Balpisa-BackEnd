@@ -35,7 +35,7 @@ const getModelosM2FromFamilia = async (req, res) => {
 
     // Parameterized query to prevent SQL injection
     const query = `
-        SELECT mu.nombre, mu.cantidad as unidades, mu.m2PorUnidad * mu.cantidad as m2Disponibles, mu.precio as "preciom2" 
+        SELECT mu.id, mu.nombre, mu.cantidad as unidades, mu.m2PorUnidad * mu.cantidad as m2Disponibles, mu.precio as "preciom2" 
         FROM modelounitarios as mu 
         JOIN familias ON (mu.familiaId = familias.id)
         WHERE familias.id =:familiaId;
