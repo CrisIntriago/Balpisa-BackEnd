@@ -9,7 +9,7 @@ const getModeloUnitarioById = async (req, res) => {
 
     // Parameterized query to prevent SQL injection
     const query = `
-    SELECT id, precio, m2PorUnidad FROM modelounitarios WHERE id = :id;
+    SELECT id, nombre, precio, m2PorUnidad FROM modelounitarios WHERE id = :id;
     `;
 
     sequelize.query(query, {
