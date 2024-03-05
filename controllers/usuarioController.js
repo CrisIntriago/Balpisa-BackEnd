@@ -5,7 +5,7 @@ import generarJWT from "../helpers/generarJWT.js";
 
 //Registra al usuario
 const registrar = async (req, res) => {
-    const { nombre, contrasena, token } = req.body;
+    const { nombre, contrasena } = req.body;
     const existeUsuario = await Usuario.findOne({ where: { nombre } });
 
     if (existeUsuario) {
@@ -17,12 +17,11 @@ const registrar = async (req, res) => {
     hash.update(contrasena + process.env.CONTRASENA_ENCRIPTADORA);
     const contrasenaHasheada = hash.digest("hex");
 
-
+    
     try {
         const nuevoUsuario = await Usuario.create({
             nombre,
-            contrasena: contrasenaHasheada,
-            token
+            contrasena: contrasenaHasheada
         });
         res.json({ msg: "Se ha creado correctamente el Usuario." });
     } catch (error) {
