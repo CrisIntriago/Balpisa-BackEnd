@@ -62,9 +62,12 @@ const movimientosEnFecha = async (req, res) => {
 
     // Parameterized query to prevent SQL injection
     const query = `
-        SELECT *
-        FROM movimientos
-        WHERE createdAt BETWEEN :fechaInicio AND :fechaFin;
+        SELECT mov.tipo, b.nombre, f.nombre, mo.nombre, mo.CodigoContable, mov.valorRegistro, p.nombre, mov.nFactura FROM movimientos as mov 
+        JOIN planchas as p ON (mov.planchaId = p.id)
+        JOIN modelos as mo ON (mo.id = p.modeloId)
+        JOIN familias as f ON( mo.familiaId = f.id)
+        JOIN bodegas as b ON (b.id = p.bodegaId)
+        WHERE mov.createdAt BETWEEN :fechaInicio AND :fechaFin;
     `;
 
     sequelize.query(query, {
