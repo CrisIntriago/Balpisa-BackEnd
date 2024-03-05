@@ -22,8 +22,8 @@ router.post("/m2Disponibles", getModelosM2FromFamilia);
 
 router.post("/deFamilia", getModelosFromFamilia);
 
-router.patch("/operacion/:id/incrementar/:cantidad", incrementarCantidad);
-router.patch("/operacion/:id/decrementar/:cantidad", decrementarCantidad);
+router.put("/operacion/:id/incrementar/:cantidad", incrementarCantidad);
+router.put("/operacion/:id/decrementar/:cantidad", decrementarCantidad);
 
 
 export default router;
