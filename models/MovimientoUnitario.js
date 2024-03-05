@@ -20,6 +20,9 @@ const MovimientoUnitario = sequelize.define("movimientounitarios", {
     precioVenta: {
         type: DataTypes.DECIMAL(7, 2),
     },
+    valorRegistro: {
+        type: DataTypes.STRING,
+    }
 }, {
     timestamps: true,
 });
