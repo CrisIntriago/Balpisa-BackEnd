@@ -51,11 +51,11 @@ const movimientosEnFecha = async (req, res) => {
 
     // Parameterized query to prevent SQL injection
     const query = `
-        SELECT movu.tipo, modu.nombre, modu.codContable, movu.cantidadCambiada, movu.valorRegistro, movu.nFactura
+        SELECT movu.id, movu.tipo, modu.nombre, modu.codContable, movu.cantidadCambiada, movu.valorRegistro, movu.nFactura
         FROM movimientounitarios AS movu
         JOIN modelounitarios AS modu ON (movu.modeloUnitarioId = modu.id)
         WHERE movu.createdAt BETWEEN :fechaInicio AND :fechaFin
-        LIMIT 25 OFFSET :offset;
+        LIMIT 5 OFFSET :offset;
     `;
 
     sequelize.query(query, {
