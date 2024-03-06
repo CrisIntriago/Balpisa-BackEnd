@@ -11,7 +11,7 @@ router.get("/", findAllMovimientos);
 // Get all bodegas
 router.post("/movimientosEnFecha", movimientosEnFecha);
 
-router.get("/nFilas", nFilas)
+router.post("/nFilas", nFilas)
 
 
 export default router;

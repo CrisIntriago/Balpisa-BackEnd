@@ -19,6 +19,6 @@ router.delete("/:id", deleteMovimiento);
 
 router.post("/movimientosEnFecha", movimientosEnFecha)
 
-router.get("/nFilas", nFilas)
+router.post("/nFilas", nFilas)
 
 export default router;

@@ -3,13 +3,29 @@ import { sequelize } from "../database/database.js";
 import { Sequelize } from "sequelize";
 
 const nFilas = async (req, res) => {
-  try {
-    // Contar el número de filas en la tabla
-    const count = await Movimiento.count();
-    res.status(201).send({ "nFilas": count });
-  } catch (error) {
-    res.status(500).send({ message: "Error al contar número de filas", error: error.message });
-  }
+  const { fechaInicio, fechaFin } = req.body;
+
+  // Consulta para contar el total de filas sin paginación
+  const queryFilas = `
+    SELECT COUNT(*) AS total
+    FROM movimientos AS mov 
+    JOIN (planchas AS p, modelos AS mo, familias AS f, bodegas AS b) ON (mov.planchaId = p.id AND mo.id = p.modeloId AND mo.familiaId = f.id AND b.id = p.bodegaId)
+    WHERE mov.createdAt BETWEEN :fechaInicio AND :fechaFin;
+    `;
+
+  sequelize.query(queryFilas, {
+    replacements: { fechaInicio: fechaInicio + ' 00:00:00', fechaFin: fechaFin + ' 23:59:59' }, // Use replacements for parameterized query
+    type: Sequelize.QueryTypes.SELECT // Specify the query type
+  })
+    .then(results => {
+      // Send results as JSON
+      res.status(201).json({ data: results });
+    })
+    .catch(error => {
+      console.error('Error executing raw query:', error);
+      res.status(500).json({ error: 'Error executing raw query' });
+    });
+
 }
 
 
@@ -84,52 +100,36 @@ const deleteMovimiento = async (req, res) => {
   }
 };
 const movimientosEnFecha = async (req, res) => {
+
+
   const { fechaInicio, fechaFin, offset } = req.body;
 
-  // Consulta para obtener los movimientos con paginación
-  const queryMovimientos = `
-    SELECT mov.id, mov.tipo, b.nombre AS nombreBodega, f.nombre AS nombreFamilia, mo.nombre AS nombreModelo, mo.CodigoContable, mov.valorRegistro, p.nombre AS nombrePlancha, mov.nFactura 
-    FROM movimientos AS mov 
-    JOIN (planchas AS p, modelos AS mo, familias AS f, bodegas AS b) ON (mov.planchaId = p.id AND mo.id = p.modeloId AND mo.familiaId = f.id AND b.id = p.bodegaId)
-    WHERE mov.createdAt BETWEEN :fechaInicio AND :fechaFin
-    LIMIT 5 OFFSET :offset;
+  // Parameterized query to prevent SQL injection
+  const query = `
+      SELECT mov.id, mov.tipo, b.nombre AS nombreBodega, f.nombre AS nombreFamilia, mo.nombre AS nombreModelo, mo.CodigoContable, mov.valorRegistro, p.nombre AS nombrePlancha, mov.nFactura 
+      FROM movimientos AS mov 
+      JOIN (planchas AS p, modelos AS mo, familias AS f, bodegas AS b) ON (mov.planchaId = p.id AND mo.id = p.modeloId AND mo.familiaId = f.id AND b.id = p.bodegaId)
+      WHERE mov.createdAt BETWEEN :fechaInicio AND :fechaFin
+      LIMIT 5 OFFSET :offset;
     `;
 
-  // Consulta para contar el total de filas sin paginación
-  const queryTotal = `
-    SELECT COUNT(*) AS total
-    FROM movimientos AS mov 
-    JOIN (planchas AS p, modelos AS mo, familias AS f, bodegas AS b) ON (mov.planchaId = p.id AND mo.id = p.modeloId AND mo.familiaId = f.id AND b.id = p.bodegaId)
-    WHERE mov.createdAt BETWEEN :fechaInicio AND :fechaFin;
-    `;
+  sequelize.query(query, {
+    replacements: { fechaInicio: fechaInicio + ' 00:00:00', fechaFin: fechaFin + ' 23:59:59', offset }, // Use replacements for parameterized query
+    type: Sequelize.QueryTypes.SELECT // Specify the query type
+  })
+    .then(results => {
+      // Send results as JSON
+      res.status(201).json({ data: results });
+    })
+    .catch(error => {
+      console.error('Error executing raw query:', error);
+      res.status(500).json({ error: 'Error executing raw query' });
+    });
 
-  try {
-    // Ejecutar ambas consultas de forma paralela
-    const [resultados, total] = await Promise.all([
-      sequelize.query(queryMovimientos, {
-        replacements: {
-          fechaInicio: fechaInicio + " 00:00:00",
-          fechaFin: fechaFin + " 23:59:59",
-          offset,
-        },
-        type: Sequelize.QueryTypes.SELECT,
-      }),
-      sequelize.query(queryTotal, {
-        replacements: {
-          fechaInicio: fechaInicio + " 00:00:00",
-          fechaFin: fechaFin + " 23:59:59",
-        },
-        type: Sequelize.QueryTypes.SELECT,
-      }),
-    ]);
+}
 
-    // Enviar resultados y total como JSON
-    res.status(201).json({ data: resultados, total: total[0].total });
-  } catch (error) {
-    console.error("Error executing raw query:", error);
-    res.status(500).json({ error: "Error executing raw query" });
-  }
-};
+
+
 
 export {
   addMovimiento,
