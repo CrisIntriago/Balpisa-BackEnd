@@ -1,5 +1,5 @@
 import express from "express";
-import { addMovimiento, findAllMovimientos} from "../controllers/movimientoUnitarioController.js";
+import { addMovimiento, findAllMovimientos, movimientosEnFecha, nFilas } from "../controllers/movimientoUnitarioController.js";
 
 const router = express.Router();
 
@@ -8,6 +8,10 @@ router.post("/", addMovimiento);
 
 // Get all bodegas
 router.get("/", findAllMovimientos);
+// Get all bodegas
+router.post("/movimientosEnFecha", movimientosEnFecha);
+
+router.post("/nFilas", nFilas)
 
 
 export default router;
