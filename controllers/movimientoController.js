@@ -26,8 +26,32 @@ const nFilas = async (req, res) => {
       res.status(500).json({ error: 'Error executing raw query' });
     });
 
-}
+};
 
+
+const movimientosPorPlancha = async (req, res) => {
+  const { id } = req.params;
+  const queryFilas = `
+  SELECT nFactura, Date(updatedAt) as fecha, tipo, valorRegistro , bodegas.nombre  FROM movimientos JOIN planchas ON (planchaId = planchas.id) JOIN bodegas ON ( planchas.bodegaId = bodegas.id) WHERE planchaId = 297 ;
+;
+  `;
+
+  sequelize.query(queryFilas, {
+    replacements: { id }, // Use replacements for parameterized query
+    type: Sequelize.QueryTypes.SELECT // Specify the query type
+  })
+    .then(results => {
+      // Send results as JSON
+      res.status(201).json({ data: results });
+    })
+    .catch(error => {
+      console.error('Error executing raw query:', error);
+      res.status(500).json({ error: 'Error executing raw query' });
+    });
+
+
+
+}
 
 // Create a new movimiento
 const addMovimiento = async (req, res) => {
@@ -137,5 +161,6 @@ export {
   updateMovimiento,
   deleteMovimiento,
   movimientosEnFecha,
-  nFilas
+  nFilas,
+  movimientosPorPlancha
 };
