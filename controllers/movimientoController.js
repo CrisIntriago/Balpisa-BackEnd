@@ -32,9 +32,7 @@ const nFilas = async (req, res) => {
 const movimientosPorPlancha = async (req, res) => {
   const { id } = req.params;
   const queryFilas = `
-  SELECT nFactura, Date(updatedAt) as fecha, tipo, valorRegistro , bodegas.nombre  FROM movimientos JOIN planchas ON (planchaId = planchas.id) JOIN bodegas ON ( planchas.bodegaId = bodegas.id) WHERE planchaId = 297 ;
-;
-  `;
+  SELECT movimientos.id, nFactura, Date(updatedAt) as fecha, tipo, valorRegistro , bodegas.nombre  FROM movimientos JOIN planchas ON (planchaId = planchas.id) JOIN bodegas ON ( planchas.bodegaId = bodegas.id) WHERE planchaId = :id;`;
 
   sequelize.query(queryFilas, {
     replacements: { id }, // Use replacements for parameterized query
