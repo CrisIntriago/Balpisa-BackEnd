@@ -81,8 +81,8 @@ const allPlanchas = async (req, res) => {
 // Create a new modelo
 const addModelo = async (req, res) => {
     try {
-        const { nombre, preciom2 , CodigoContable} = req.body;
-        const nuevoModelo = await Modelo.create({ nombre, preciom2 , CodigoContable});
+        const { nombre, preciom2 , CodigoContable, familiaId} = req.body;
+        const nuevoModelo = await Modelo.create({ nombre, preciom2 , CodigoContable, familiaId});
         res.status(201).json(nuevoModelo);
     } catch (error) {
         console.error("Error al crear el modelo:", error);

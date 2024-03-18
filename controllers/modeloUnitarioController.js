@@ -129,8 +129,9 @@ const decrementarCantidad = async (req, res) => {
 // Create a new modelo
 const addModelo = async (req, res) => {
     try {
-        const { nombre, codigoUnitario, m2PorUnidad, precio } = req.body;
-        const nuevoModelo = await ModeloUnitario.create({ nombre, codigoUnitario, m2PorUnidad, precio });
+        const { nombre, codContable, m2PorUnidad, precio, familiaId } = req.body;
+        const cantidad = 0;
+        const nuevoModelo = await ModeloUnitario.create({ nombre, codContable, m2PorUnidad, precio , familiaId, cantidad});
         res.status(201).json(nuevoModelo);
     } catch (error) {
         console.error("Error al crear el modelo:", error);
