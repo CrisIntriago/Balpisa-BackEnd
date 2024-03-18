@@ -129,8 +129,8 @@ const decrementarCantidad = async (req, res) => {
 // Create a new modelo
 const addModelo = async (req, res) => {
     try {
-        const { nombre, preciom2 } = req.body;
-        const nuevoModelo = await Modelo.create({ nombre, preciom2 });
+        const { nombre, codigoUnitario, m2PorUnidad, precio } = req.body;
+        const nuevoModelo = await ModeloUnitario.create({ nombre, codigoUnitario, m2PorUnidad, precio });
         res.status(201).json(nuevoModelo);
     } catch (error) {
         console.error("Error al crear el modelo:", error);
@@ -141,7 +141,7 @@ const addModelo = async (req, res) => {
 // Get all modelos
 const findAll = async (req, res) => {
     try {
-        const modelos = await Modelo.findAll();
+        const modelos = await ModeloUnitario.findAll();
         res.json(modelos);
     } catch (error) {
         console.error("Error al obtener los modelos:", error);
@@ -153,13 +153,15 @@ const findAll = async (req, res) => {
 const updateModelo = async (req, res) => {
     try {
         const { id } = req.params;
-        const { nombre, preciom2 } = req.body;
-        const modelo = await Modelo.findByPk(id);
+        const { nombre, codContable,m2PorUnidad, precio } = req.body;
+        const modelo = await ModeloUnitario.findByPk(id);
         if (!modelo) {
             return res.status(404).json({ error: "Modelo no encontrado" });
         }
         modelo.nombre = nombre;
-        modelo.preciom2 = preciom2;
+        modelo.codContable = codContable;
+        modelo.m2PorUnidad = m2PorUnidad;
+        modelo.precio = precio;
         await modelo.save();
         res.json(modelo);
     } catch (error) {
@@ -172,7 +174,7 @@ const updateModelo = async (req, res) => {
 const deleteModelo = async (req, res) => {
     try {
         const { id } = req.params;
-        const deletedModelo = await Modelo.destroy({ where: { id } });
+        const deletedModelo = await ModeloUnitario.destroy({ where: { id } });
         if (!deletedModelo) {
             return res.status(404).json({ error: "Modelo no encontrado" });
         }
@@ -192,5 +194,7 @@ export {
     getModelosFromFamilia,
     incrementarCantidad,
     decrementarCantidad,
-    getModeloUnitarioById
+    getModeloUnitarioById,
+    addModelo,
+    updateModelo
 };
