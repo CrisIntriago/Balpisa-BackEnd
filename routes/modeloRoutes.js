@@ -11,7 +11,7 @@ router.get("/", findAll);
 
 
 //ESTE ES EL GET MODELO NECESARIO PARA LLENAR LUEGO EN modificar modelo
-router.get("/:id", getModelo);
+router.get("/obtenerById/:id", getModelo);
 
 
 
