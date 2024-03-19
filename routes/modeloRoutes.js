@@ -1,5 +1,5 @@
 import express from "express";
-import { addModelo, findAll, updateModelo, deleteModelo, getModelosM2FromFamilia, allPlanchas , getModelosFromFamilia} from "../controllers/modeloController.js";
+import { addModelo, findAll, updateModelo, deleteModelo, getModelosM2FromFamilia, allPlanchas , getModelosFromFamilia, getModelo} from "../controllers/modeloController.js";
 
 const router = express.Router();
 
@@ -8,6 +8,12 @@ router.post("/", addModelo);
 
 // Get all modelos
 router.get("/", findAll);
+
+
+//ESTE ES EL GET MODELO NECESARIO PARA LLENAR LUEGO EN modificar modelo
+router.get("/:id", getModelo);
+
+
 
 // Update a modelo by ID
 router.put("/:id", updateModelo);
