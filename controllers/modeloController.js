@@ -81,8 +81,8 @@ const allPlanchas = async (req, res) => {
 // Create a new modelo
 const addModelo = async (req, res) => {
     try {
-        const { nombre, preciom2 } = req.body;
-        const nuevoModelo = await Modelo.create({ nombre, preciom2 });
+        const { nombre, preciom2, CodigoContable, familiaId } = req.body;
+        const nuevoModelo = await Modelo.create({ nombre, preciom2, CodigoContable, familiaId });
         res.status(201).json(nuevoModelo);
     } catch (error) {
         console.error("Error al crear el modelo:", error);
@@ -105,13 +105,14 @@ const findAll = async (req, res) => {
 const updateModelo = async (req, res) => {
     try {
         const { id } = req.params;
-        const { nombre, preciom2 } = req.body;
+        const { nombre, preciom2, CodigoContable } = req.body;
         const modelo = await Modelo.findByPk(id);
         if (!modelo) {
             return res.status(404).json({ error: "Modelo no encontrado" });
         }
         modelo.nombre = nombre;
         modelo.preciom2 = preciom2;
+        modelo.CodigoContable = CodigoContable;
         await modelo.save();
         res.json(modelo);
     } catch (error) {
@@ -119,6 +120,31 @@ const updateModelo = async (req, res) => {
         res.status(500).json({ error: "Error al actualizar el modelo en la base de datos" });
     }
 }
+
+// Update a modelo by ID
+const getModelo = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const modelo = await Modelo.findByPk(id);
+        if (modelo) {
+            // Define manualmente el objeto que deseas enviar,
+            // seleccionando solo las columnas específicas que quieras incluir
+            const respuesta = {
+                nombre: modelo.nombre,
+                CodigoContable: modelo.CodigoContable,
+                preciom2: modelo.preciom2
+                // Añade aquí las demás columnas que quieras incluir
+            };
+
+            res.json(respuesta);
+        } else {
+            res.status(404).send('Modelo no encontrado');
+        }
+    }catch(error){
+        console.log(error);
+    }
+}
+
 
 // Delete a modelo by ID
 const deleteModelo = async (req, res) => {
@@ -143,4 +169,5 @@ export {
     getModelosM2FromFamilia,
     allPlanchas,
     getModelosFromFamilia,
+    getModelo
 };
