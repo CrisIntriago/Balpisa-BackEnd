@@ -1,5 +1,5 @@
 import express from "express";
-import { addMovimiento, findAllMovimientos, updateMovimiento, deleteMovimiento, movimientosEnFecha , nFilas, movimientosPorPlancha} from "../controllers/movimientoController.js";
+import { addMovimiento, findAllMovimientos, updateMovimiento, deleteMovimiento, movimientosEnFecha , nFilas, movimientosPorPlancha, imprimir} from "../controllers/movimientoController.js";
 
 const router = express.Router();
 
@@ -20,6 +20,10 @@ router.delete("/:id", deleteMovimiento);
 router.post("/movimientosEnFecha", movimientosEnFecha)
 
 router.post("/nFilas", nFilas)
+
+
+router.post("/imprimir", imprimir);
+
 
 
 //obtener movimientos Por plancha
