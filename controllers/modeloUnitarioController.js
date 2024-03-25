@@ -1,6 +1,8 @@
 import { ModeloUnitario } from "../models/Relaciones.js";
 import { sequelize } from "../database/database.js";
 import Sequelize from "sequelize";
+import { CantidadEnBodega } from "../models/Relaciones.js";
+
 
 
 const getModeloUnitarioById = async (req, res) => {
@@ -110,21 +112,42 @@ const getCantidadXBodega = async (req, res) => {
 
 
 const incrementarCantidad = async (req, res) => {
-    const { id, cantidad } = req.params;
+
+    const { modeloId, bodegaId, cantidad } = req.params;
 
     try {
-        // Intenta incrementar el campo numérico
-        await ModeloUnitario.increment(
-            { 'cantidad': cantidad }, // Asegúrate de reemplazar 'tuCampoNumerico' con el nombre real del campo
-            { where: { id: id } }
-        );
+        // Utiliza await para esperar la promesa de findOrCreate
+        const [resultado, creado] = await CantidadEnBodega.findOrCreate({
+            where:
+            {
+                modelounitarioId: modeloId,
+                bodegaId: bodegaId
+            },
+            defaults: {
+                // valores por defecto para la creación
+                modelounitarioId: modeloId,
+                bodegaId: bodegaId
+                // otros valores por defecto según sea necesario
+            }
+        });
 
+        if (creado) {
+            console.log('Creado', resultado.get({ plain: true }));
+            resultado.cantidad= parseInt(cantidad);
+            //Puedo manipular a creado !
+        } else {
+            console.log('Encontrado', resultado.get({ plain: true }));
+            resultado.cantidad+= parseInt(cantidad);
+        }
+        await resultado.save();
         res.status(200).send({ message: "Cantidad aumentada exitosamente" });
 
+
     } catch (error) {
-        // Maneja cualquier error que ocurra durante la operación
-        res.status(500).send({ message: "Ocurrió un error al aumentar la cantidad", error: error.message });
+        console.error('Error:', error);
+        res.status(500).send({ message: "Ocurrió un error al intentar crear o encontrar la cantidad para Modelos Unitarios, en modeloUnitarioController.jsx", error: error.message });
     }
+
 };
 
 
