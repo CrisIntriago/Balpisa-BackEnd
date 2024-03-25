@@ -1,4 +1,6 @@
 import { MovimientoUnitario } from '../models/Relaciones.js'; // Ajusta la ruta según sea necesario
+import { CantidadEnBodega } from "../models/Relaciones.js";
+
 import { sequelize } from '../database/database.js';
 import { Sequelize } from 'sequelize';
 

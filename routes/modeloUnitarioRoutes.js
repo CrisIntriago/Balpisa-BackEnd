@@ -1,5 +1,5 @@
 import express from "express";
-import { getModelosM2FromFamilia, getModelosFromFamilia, incrementarCantidad, decrementarCantidad, getModeloUnitarioById ,addModelo,updateModelo} from "../controllers/modeloUnitarioController.js";
+import { getModelosM2FromFamilia, getModelosFromFamilia, incrementarCantidad, decrementarCantidad, getModeloUnitarioById ,addModelo,updateModelo, getCantidadXBodega} from "../controllers/modeloUnitarioController.js";
 
 const router = express.Router();
 
@@ -17,6 +17,8 @@ router.put("/:id", updateModelo);
 router.delete("/:id", deleteModelo);
 
 */
+
+router.get("/cantidadXBodega/:modeloId", getCantidadXBodega)
 
 router.post("/m2Disponibles", getModelosM2FromFamilia);
 

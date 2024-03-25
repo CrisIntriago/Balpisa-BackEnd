@@ -13,9 +13,6 @@ const ModeloUnitario = sequelize.define("modelounitarios", {
     precio: {
         type: DataTypes.DECIMAL(6,2),
     },
-    cantidad: {
-        type: DataTypes.INTEGER,
-    },
     codContable: {
         type: DataTypes.STRING,
     },

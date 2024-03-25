@@ -38,4 +38,5 @@ export{
     Movimiento,
     ModeloUnitario,
     MovimientoUnitario,
+    CantidadEnBodega
 }

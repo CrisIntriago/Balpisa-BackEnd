@@ -62,10 +62,9 @@ const getModelosM2FromFamilia = async (req, res) => {
 
     // Parameterized query to prevent SQL injection
     const query = `
-        SELECT mu.id, mu.nombre, mu.cantidad as unidades, mu.m2PorUnidad * mu.cantidad as m2Disponibles, mu.precio as "preciom2" 
-        FROM modelounitarios as mu 
-        JOIN familias ON (mu.familiaId = familias.id)
-        WHERE familias.id =:familiaId;
+        SELECT modelounitarios.id,  modelounitarios.nombre, sum(cantidad) as unidades , sum(cantidad)*modelounitarios.m2PorUnidad as m2Disponibles, modelounitarios.precio as preciom2 FROM cantidadenbodegas JOIN modelounitarios ON (modelounitarios.id = cantidadenbodegas.modelounitarioId) JOIN bodegas ON (bodegas.id = cantidadenbodegas.bodegaId) JOIN  familias ON (familias.id = modelounitarios.familiaId)
+        WHERE familias.id= :familiaId
+        group by modelounitarios.id;
     `;
 
     sequelize.query(query, {
@@ -82,6 +81,32 @@ const getModelosM2FromFamilia = async (req, res) => {
         });
 
 };
+
+const getCantidadXBodega = async (req, res) => {
+    const { modeloId } = req.params;
+
+    // Parameterized query to prevent SQL injection
+    const query = `
+        SELECT cantidad , bodegas.nombre  FROM cantidadenbodegas JOIN modelounitarios ON (modelounitarios.id = cantidadenbodegas.modelounitarioId) JOIN bodegas ON (bodegas.id = cantidadenbodegas.bodegaId)
+        WHERE modelounitarios.id = :modeloId;
+    `;
+
+    sequelize.query(query, {
+        replacements: { modeloId }, // Use replacements for parameterized query
+        type: Sequelize.QueryTypes.SELECT // Specify the query type
+    })
+        .then(results => {
+            // Send results as JSON
+            res.status(201).json({ data: results });
+        })
+        .catch(error => {
+            console.error('Error executing raw query:', error);
+            res.status(500).json({ error: 'Error executing raw query' });
+        });
+
+}
+
+
 
 
 const incrementarCantidad = async (req, res) => {
@@ -131,7 +156,7 @@ const addModelo = async (req, res) => {
     try {
         const { nombre, codContable, m2PorUnidad, precio, familiaId } = req.body;
         const cantidad = 0;
-        const nuevoModelo = await ModeloUnitario.create({ nombre, codContable, m2PorUnidad, precio , familiaId, cantidad});
+        const nuevoModelo = await ModeloUnitario.create({ nombre, codContable, m2PorUnidad, precio, familiaId, cantidad });
         res.status(201).json(nuevoModelo);
     } catch (error) {
         console.error("Error al crear el modelo:", error);
@@ -154,7 +179,7 @@ const findAll = async (req, res) => {
 const updateModelo = async (req, res) => {
     try {
         const { id } = req.params;
-        const { nombre, codContable,m2PorUnidad, precio } = req.body;
+        const { nombre, codContable, m2PorUnidad, precio } = req.body;
         const modelo = await ModeloUnitario.findByPk(id);
         if (!modelo) {
             return res.status(404).json({ error: "Modelo no encontrado" });
@@ -197,5 +222,6 @@ export {
     decrementarCantidad,
     getModeloUnitarioById,
     addModelo,
-    updateModelo
+    updateModelo,
+    getCantidadXBodega
 };
