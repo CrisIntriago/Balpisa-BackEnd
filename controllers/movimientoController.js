@@ -1,6 +1,52 @@
-import { Movimiento } from "../models/Relaciones.js";
+import { Movimiento, MovimientoUnitario } from "../models/Relaciones.js";
 import { sequelize } from "../database/database.js";
 import { Sequelize } from "sequelize";
+
+const imprimir = async (req, res) => {
+
+  const { fechaInicio, fechaFin } = req.body;
+
+  // Parameterized query to prevent SQL injection
+  const queryPlanchas = `
+      SELECT mov.id, mov.tipo, b.nombre AS nombreBodega, f.nombre AS nombreFamilia, mo.nombre AS nombreModelo, mo.CodigoContable, mov.valorRegistro, p.nombre AS nombrePlancha, mov.nFactura 
+      FROM movimientos AS mov 
+      JOIN (planchas AS p, modelos AS mo, familias AS f, bodegas AS b) ON (mov.planchaId = p.id AND mo.id = p.modeloId AND mo.familiaId = f.id AND b.id = p.bodegaId)
+      WHERE mov.createdAt BETWEEN :fechaInicio AND :fechaFin
+    `;
+
+
+  const queryUnitarios = `
+      SELECT movu.id, movu.tipo, modu.nombre, modu.codContable, movu.cantidadCambiada, movu.valorRegistro, movu.nFactura
+      FROM movimientounitarios AS movu
+      JOIN modelounitarios AS modu ON (movu.modeloUnitarioId = modu.id)
+      WHERE movu.createdAt BETWEEN :fechaInicio AND :fechaFin
+    `;
+
+
+  try {
+    const movimientosPlanchas =  await sequelize.query(queryPlanchas, {
+      replacements: { fechaInicio: fechaInicio + ' 00:00:00', fechaFin: fechaFin + ' 23:59:59' }, // Use replacements for parameterized query
+      type: Sequelize.QueryTypes.SELECT // Specify the query type
+    });
+
+    const movimientosUnitarios = await sequelize.query(queryUnitarios, {
+      replacements: { fechaInicio: fechaInicio + ' 00:00:00', fechaFin: fechaFin + ' 23:59:59' }, // Use replacements for parameterized query
+      type: Sequelize.QueryTypes.SELECT // Specify the query type
+    });
+
+    res.status(201).json({
+      movimientosPlanchas: movimientosPlanchas,
+      movimientosUnitarios: movimientosUnitarios
+    })
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Hubo un error ejecutando la consulta" });
+  }
+
+
+};
+
 
 const nFilas = async (req, res) => {
   const { fechaInicio, fechaFin } = req.body;
@@ -161,5 +207,6 @@ export {
   deleteMovimiento,
   movimientosEnFecha,
   nFilas,
-  movimientosPorPlancha
+  movimientosPorPlancha,
+  imprimir
 };

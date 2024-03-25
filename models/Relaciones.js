@@ -5,6 +5,7 @@ import Movimiento from "./Movimiento.js";
 import Plancha from "./Plancha.js";
 import MovimientoUnitario from "./MovimientoUnitario.js"
 import ModeloUnitario from "./ModeloUnitario.js"
+import CantidadEnBodega from "./CantidadEnBodega.js";
 
 Familia.hasMany(Modelo);
 Modelo.belongsTo(Familia);
@@ -26,6 +27,8 @@ ModeloUnitario.hasMany(MovimientoUnitario);
 MovimientoUnitario.belongsTo(ModeloUnitario);
 
 
+CantidadEnBodega.belongsToMany(Bodega, { through: CantidadEnBodega });
+Bodega.belongsToMany(ModeloUnitario, { through: CantidadEnBodega });
 
 export{
     Familia,
