@@ -27,7 +27,7 @@ ModeloUnitario.hasMany(MovimientoUnitario);
 MovimientoUnitario.belongsTo(ModeloUnitario);
 
 
-CantidadEnBodega.belongsToMany(Bodega, { through: CantidadEnBodega });
+ModeloUnitario.belongsToMany(Bodega, { through: CantidadEnBodega });
 Bodega.belongsToMany(ModeloUnitario, { through: CantidadEnBodega });
 
 export{
@@ -38,4 +38,5 @@ export{
     Movimiento,
     ModeloUnitario,
     MovimientoUnitario,
+    CantidadEnBodega
 }

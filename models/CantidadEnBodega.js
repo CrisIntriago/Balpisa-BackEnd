@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize"
 import { sequelize } from "../database/database.js"
 
 
-const CantidadEnBodega = sequelize.define('CantidadEnBodega', {
+const CantidadEnBodega = sequelize.define('cantidadenbodegas', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,

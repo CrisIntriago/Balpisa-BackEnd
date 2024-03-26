@@ -9,7 +9,7 @@ const MovimientoUnitario = sequelize.define("movimientounitarios", {
     },
     tipo: {
         type: DataTypes.ENUM,
-        values: ["Ingreso", "Salida","Desperfecto"],
+        values: ["Ingreso", "Salida","Desperfecto", "CambioBodega"],
     },
     cantidadCambiada: {
         type: DataTypes.INTEGER,

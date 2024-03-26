@@ -1,6 +1,8 @@
 import { ModeloUnitario } from "../models/Relaciones.js";
 import { sequelize } from "../database/database.js";
 import Sequelize from "sequelize";
+import { CantidadEnBodega } from "../models/Relaciones.js";
+
 
 
 const getModeloUnitarioById = async (req, res) => {
@@ -62,10 +64,9 @@ const getModelosM2FromFamilia = async (req, res) => {
 
     // Parameterized query to prevent SQL injection
     const query = `
-        SELECT mu.id, mu.nombre, mu.cantidad as unidades, mu.m2PorUnidad * mu.cantidad as m2Disponibles, mu.precio as "preciom2" 
-        FROM modelounitarios as mu 
-        JOIN familias ON (mu.familiaId = familias.id)
-        WHERE familias.id =:familiaId;
+        SELECT modelounitarios.id,  modelounitarios.nombre, sum(cantidad) as unidades , sum(cantidad)*modelounitarios.m2PorUnidad as m2Disponibles, modelounitarios.precio as preciom2 FROM cantidadenbodegas JOIN modelounitarios ON (modelounitarios.id = cantidadenbodegas.modelounitarioId) JOIN bodegas ON (bodegas.id = cantidadenbodegas.bodegaId) JOIN  familias ON (familias.id = modelounitarios.familiaId)
+        WHERE familias.id= :familiaId
+        group by modelounitarios.id;
     `;
 
     sequelize.query(query, {
@@ -83,43 +84,144 @@ const getModelosM2FromFamilia = async (req, res) => {
 
 };
 
+const getCantidadXBodega = async (req, res) => {
+    const { modeloId } = req.params;
+
+    // Parameterized query to prevent SQL injection
+    const query = `
+        SELECT cantidad , bodegas.nombre  FROM cantidadenbodegas JOIN modelounitarios ON (modelounitarios.id = cantidadenbodegas.modelounitarioId) JOIN bodegas ON (bodegas.id = cantidadenbodegas.bodegaId)
+        WHERE modelounitarios.id = :modeloId;
+    `;
+
+    sequelize.query(query, {
+        replacements: { modeloId }, // Use replacements for parameterized query
+        type: Sequelize.QueryTypes.SELECT // Specify the query type
+    })
+        .then(results => {
+            // Send results as JSON
+            res.status(201).json({ data: results });
+        })
+        .catch(error => {
+            console.error('Error executing raw query:', error);
+            res.status(500).json({ error: 'Error executing raw query' });
+        });
+
+}
+
+
+
+const getCantidadEnBodega = async (req, res) => {
+    const { modeloId , bodegaId} = req.params;
+
+    // Parameterized query to prevent SQL injection
+    const query = `
+        SELECT cantidad , bodegas.nombre  FROM cantidadenbodegas JOIN modelounitarios ON (modelounitarios.id = cantidadenbodegas.modelounitarioId) JOIN bodegas ON (bodegas.id = cantidadenbodegas.bodegaId)
+        WHERE modelounitarios.id = :modeloId and bodegaId= :bodegaId;
+    `;
+
+    sequelize.query(query, {
+        replacements: { modeloId , bodegaId}, // Use replacements for parameterized query
+        type: Sequelize.QueryTypes.SELECT // Specify the query type
+    })
+        .then(results => {
+            // Send results as JSON
+            res.status(201).json({ data: results });
+        })
+        .catch(error => {
+            console.error('Error executing raw query:', error);
+            res.status(500).json({ error: 'Error executing raw query' });
+        });
+
+}
+
+
+
+
 
 const incrementarCantidad = async (req, res) => {
-    const { id, cantidad } = req.params;
+
+    const { modeloId, bodegaId, cantidad } = req.params;
 
     try {
-        // Intenta incrementar el campo numérico
-        await ModeloUnitario.increment(
-            { 'cantidad': cantidad }, // Asegúrate de reemplazar 'tuCampoNumerico' con el nombre real del campo
-            { where: { id: id } }
-        );
+        // Utiliza await para esperar la promesa de findOrCreate
+        const [resultado, creado] = await CantidadEnBodega.findOrCreate({
+            where:
+            {
+                modelounitarioId: modeloId,
+                bodegaId: bodegaId
+            },
+            defaults: {
+                // valores por defecto para la creación
+                modelounitarioId: modeloId,
+                bodegaId: bodegaId
+                // otros valores por defecto según sea necesario
+            }
+        });
 
+        if (creado) {
+            console.log('Creado', resultado.get({ plain: true }));
+            resultado.cantidad = parseInt(cantidad);
+            //Puedo manipular a creado !
+        } else {
+            console.log('Encontrado', resultado.get({ plain: true }));
+            resultado.cantidad += parseInt(cantidad);
+        }
+        await resultado.save();
         res.status(200).send({ message: "Cantidad aumentada exitosamente" });
 
+
     } catch (error) {
-        // Maneja cualquier error que ocurra durante la operación
-        res.status(500).send({ message: "Ocurrió un error al aumentar la cantidad", error: error.message });
+        console.error('Error:', error);
+        res.status(500).send({ message: "Ocurrió un error al intentar crear o encontrar la cantidad para Modelos Unitarios, en modeloUnitarioController.jsx", error: error.message });
     }
+
 };
 
 
 const decrementarCantidad = async (req, res) => {
-    const { id, cantidad } = req.params;
+    const { modeloId, bodegaId, cantidad } = req.params;
 
     try {
-        // Intenta decrementar el campo numérico
-        await ModeloUnitario.decrement(
-            { 'cantidad': cantidad }, // Asegúrate de reemplazar 'tuCampoNumerico' con el nombre real del campo
-            { where: { id: id } }
-        );
+        // Utiliza await para esperar la promesa de findOrCreate
+        const [resultado, creado] = await CantidadEnBodega.findOrCreate({
+            where:
+            {
+                modelounitarioId: modeloId,
+                bodegaId: bodegaId
+            },
+            defaults: {
+                // valores por defecto para la creación
+                modelounitarioId: modeloId,
+                bodegaId: bodegaId
+                // otros valores por defecto según sea necesario
+            }
+        });
 
-        res.status(200).send({ message: "Cantidad decrementada exitosamente" });
+        if (creado) {
+            console.log('Creado', resultado.get({ plain: true }));
+            resultado.cantidad = parseInt( - cantidad);
+            //Puedo manipular a creado !
+        } else {
+            console.log('Encontrado', resultado.get({ plain: true }));
+            resultado.cantidad -= parseInt(cantidad);
+        }
+        await resultado.save();
+        res.status(200).send({ message: "Cantidad aumentada exitosamente" });
+
 
     } catch (error) {
-        // Maneja cualquier error que ocurra durante la operación
-        res.status(500).send({ message: "Ocurrió un error al decrementar la cantidad", error: error.message });
+        console.error('Error:', error);
+        res.status(500).send({ message: "Ocurrió un error al intentar crear o encontrar la cantidad para Modelos Unitarios, en modeloUnitarioController.jsx", error: error.message });
     }
 };
+
+
+
+
+
+
+
+
 
 
 // FALTA MODIFICAR TODO ESTOOOOO:
@@ -131,7 +233,7 @@ const addModelo = async (req, res) => {
     try {
         const { nombre, codContable, m2PorUnidad, precio, familiaId } = req.body;
         const cantidad = 0;
-        const nuevoModelo = await ModeloUnitario.create({ nombre, codContable, m2PorUnidad, precio , familiaId, cantidad});
+        const nuevoModelo = await ModeloUnitario.create({ nombre, codContable, m2PorUnidad, precio, familiaId, cantidad });
         res.status(201).json(nuevoModelo);
     } catch (error) {
         console.error("Error al crear el modelo:", error);
@@ -154,7 +256,7 @@ const findAll = async (req, res) => {
 const updateModelo = async (req, res) => {
     try {
         const { id } = req.params;
-        const { nombre, codContable,m2PorUnidad, precio } = req.body;
+        const { nombre, codContable, m2PorUnidad, precio } = req.body;
         const modelo = await ModeloUnitario.findByPk(id);
         if (!modelo) {
             return res.status(404).json({ error: "Modelo no encontrado" });
@@ -197,5 +299,7 @@ export {
     decrementarCantidad,
     getModeloUnitarioById,
     addModelo,
-    updateModelo
+    updateModelo,
+    getCantidadXBodega,
+    getCantidadEnBodega
 };
