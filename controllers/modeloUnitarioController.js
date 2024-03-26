@@ -110,6 +110,33 @@ const getCantidadXBodega = async (req, res) => {
 
 
 
+const getCantidadEnBodega = async (req, res) => {
+    const { modeloId , bodegaId} = req.params;
+
+    // Parameterized query to prevent SQL injection
+    const query = `
+        SELECT cantidad , bodegas.nombre  FROM cantidadenbodegas JOIN modelounitarios ON (modelounitarios.id = cantidadenbodegas.modelounitarioId) JOIN bodegas ON (bodegas.id = cantidadenbodegas.bodegaId)
+        WHERE modelounitarios.id = :modeloId and bodegaId= :bodegaId;
+    `;
+
+    sequelize.query(query, {
+        replacements: { modeloId , bodegaId}, // Use replacements for parameterized query
+        type: Sequelize.QueryTypes.SELECT // Specify the query type
+    })
+        .then(results => {
+            // Send results as JSON
+            res.status(201).json({ data: results });
+        })
+        .catch(error => {
+            console.error('Error executing raw query:', error);
+            res.status(500).json({ error: 'Error executing raw query' });
+        });
+
+}
+
+
+
+
 
 const incrementarCantidad = async (req, res) => {
 
@@ -273,5 +300,6 @@ export {
     getModeloUnitarioById,
     addModelo,
     updateModelo,
-    getCantidadXBodega
+    getCantidadXBodega,
+    getCantidadEnBodega
 };
