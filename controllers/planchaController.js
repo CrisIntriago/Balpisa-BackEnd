@@ -138,12 +138,11 @@ const getPlancha = async (req, res) => {
 
     // Parameterized query to prevent SQL injection
     const query = `
-        SELECT planchas.id,planchas.nombre,alto,ancho, despunte1A, despunte1B, despunte2A, despunte2B, despunte3A, despunte3B , modelos.preciom2,
+        SELECT planchas.id,planchas.nombre,alto,ancho, despunte1A, despunte1B, despunte2A, despunte2B, despunte3A, despunte3B , modelos.preciom2, estado
         FROM (planchas JOIN modelos ON (planchas.modeloId = modelos.id))
         WHERE planchas.id= :id;
         
     `;
-
     sequelize.query(query, {
         replacements: { id }, // Use replacements for parameterized query
         type: Sequelize.QueryTypes.SELECT // Specify the query type
