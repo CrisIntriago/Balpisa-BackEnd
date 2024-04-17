@@ -17,7 +17,7 @@ router.post("/:id", deleteMovimiento);
 
 // Obtener todos los movimientos en un rango de fecha
 
-router.post("/movimientosEnFecha", movimientosEnFecha)
+router.post("/reportes/movimientosEnFecha", movimientosEnFecha)
 
 router.post("/nFilas", nFilas)
 
