@@ -1,5 +1,5 @@
 import express from "express";
-import { addMovimiento, findAllMovimientos, movimientosEnFecha, nFilas } from "../controllers/movimientoUnitarioController.js";
+import { addMovimiento, findAllMovimientos, movimientosEnFecha, nFilas, deleteMovimiento } from "../controllers/movimientoUnitarioController.js";
 
 const router = express.Router();
 
@@ -12,6 +12,11 @@ router.get("/", findAllMovimientos);
 router.post("/movimientosEnFecha", movimientosEnFecha);
 
 router.post("/nFilas", nFilas)
+
+
+
+// Delete a movimiento by ID
+router.post("/:id", deleteMovimiento);
 
 
 export default router;

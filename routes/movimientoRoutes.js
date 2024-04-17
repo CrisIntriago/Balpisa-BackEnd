@@ -13,7 +13,7 @@ router.get("/", findAllMovimientos);
 router.put("/:id", updateMovimiento);
 
 // Delete a movimiento by ID
-router.delete("/:id", deleteMovimiento);
+router.post("/:id", deleteMovimiento);
 
 // Obtener todos los movimientos en un rango de fecha
 
