@@ -4,6 +4,25 @@ import { CantidadEnBodega } from "../models/Relaciones.js";
 import { sequelize } from '../database/database.js';
 import { Sequelize } from 'sequelize';
 
+
+const deleteMovimiento = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const deletedMovimiento = await MovimientoUnitario.destroy({ where: { id } });
+      if (!deletedMovimiento) {
+        return res.status(404).json({ error: "Movimiento no encontrado" });
+      }
+      res.status(204).end();
+    } catch (error) {
+      console.error("Error al eliminar el movimiento:", error);
+      res
+        .status(500)
+        .json({ error: "Error al eliminar el movimiento de la base de datos" });
+    }
+  };
+
+
+
 const nFilas = async (req, res) => {
     const { fechaInicio, fechaFin } = req.body;
 
@@ -79,5 +98,6 @@ export {
     addMovimiento,
     findAllMovimientos,
     movimientosEnFecha,
-    nFilas
+    nFilas,
+    deleteMovimiento
 };
