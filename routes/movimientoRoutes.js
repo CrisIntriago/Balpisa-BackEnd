@@ -1,5 +1,5 @@
 import express from "express";
-import { addMovimiento, findAllMovimientos, updateMovimiento, deleteMovimiento, movimientosEnFecha , nFilas, movimientosPorPlancha, imprimir} from "../controllers/movimientoController.js";
+import { addMovimiento, findAllMovimientos, updateMovimiento, deleteMovimiento, movimientosEnFecha , nFilas, movimientosPorPlancha, imprimir, movimientosPorModelo} from "../controllers/movimientoController.js";
 
 const router = express.Router();
 
@@ -18,6 +18,7 @@ router.post("/:id", deleteMovimiento);
 // Obtener todos los movimientos en un rango de fecha
 
 router.post("/reportes/movimientosEnFecha", movimientosEnFecha)
+router.post("/reportes/movimientosPorModelo", movimientosPorModelo)
 
 router.post("/nFilas", nFilas)
 
