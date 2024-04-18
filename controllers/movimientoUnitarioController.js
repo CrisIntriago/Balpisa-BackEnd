@@ -113,6 +113,59 @@ const updateMovimiento = async (req, res) => {
   };
 
   
+  const movimientosPorModelo = async (req, res) => {
+    const { modeloId} = req.body;
+  
+    // Parameterized query to prevent SQL injection
+    const query = `
+            SELECT createdAt, tipo, cantidadCambiada, valorRegistro, nFactura 
+            FROM movimientounitarios
+            where modelounitarioId=:modeloId;
+      `;
+  
+    sequelize.query(query, {
+      replacements: { modeloId }, // Use replacements for parameterized query
+      type: Sequelize.QueryTypes.SELECT // Specify the query type
+    })
+      .then(results => {
+        // Send results as JSON
+        res.status(201).json({ data: results });
+      })
+      .catch(error => {
+        console.error('Error executing raw query:', error);
+        res.status(500).json({ error: 'Error executing raw query' });
+      });
+  
+  };
+  
+  const nFilasModelo = async (req, res) => {
+  
+    const { modeloId } = req.body;
+  
+    // Parameterized query to prevent SQL injection
+    const query = `
+          SELECT COUNT(*) AS total
+          FROM movimientos AS mov 
+          JOIN (planchas AS p, modelos AS mo, familias AS f, bodegas AS b) ON (mov.planchaId = p.id AND mo.id = p.modeloId AND mo.familiaId = f.id AND b.id = p.bodegaId)
+          WHERE mo.id = :modeloId
+          order by mov.createdAt desc
+      `;
+  
+    sequelize.query(query, {
+      replacements: { modeloId }, // Use replacements for parameterized query
+      type: Sequelize.QueryTypes.SELECT // Specify the query type
+    })
+      .then(results => {
+        // Send results as JSON
+        res.status(201).json({ data: results });
+      })
+      .catch(error => {
+        console.error('Error executing raw query:', error);
+        res.status(500).json({ error: 'Error executing raw query' });
+      });
+  };
+  
+  
 
 
 export {
@@ -121,5 +174,7 @@ export {
     movimientosEnFecha,
     nFilas,
     deleteMovimiento,
-    updateMovimiento
+    updateMovimiento,
+    movimientosPorModelo,
+    nFilasModelo
 };
