@@ -93,11 +93,33 @@ const movimientosEnFecha = async (req, res) => {
         });
 }
 
+const updateMovimiento = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const {nFactura } = req.body;
+      const movimiento = await MovimientoUnitario.findByPk(id);
+      if (!movimiento) {
+        return res.status(404).json({ error: "Movimiento no encontrado" });
+      }
+      movimiento.nFactura = nFactura;
+      await movimiento.save();
+      res.json(movimiento);
+    } catch (error) {
+      console.error("Error al actualizar el movimiento:", error);
+      res
+        .status(500)
+        .json({ error: "Error al actualizar el movimiento en la base de datos" });
+    }
+  };
+
+  
+
 
 export {
     addMovimiento,
     findAllMovimientos,
     movimientosEnFecha,
     nFilas,
-    deleteMovimiento
+    deleteMovimiento,
+    updateMovimiento
 };

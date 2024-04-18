@@ -24,7 +24,7 @@ const imprimir = async (req, res) => {
 
 
   try {
-    const movimientosPlanchas =  await sequelize.query(queryPlanchas, {
+    const movimientosPlanchas = await sequelize.query(queryPlanchas, {
       replacements: { fechaInicio: fechaInicio + ' 00:00:00', fechaFin: fechaFin + ' 23:59:59' }, // Use replacements for parameterized query
       type: Sequelize.QueryTypes.SELECT // Specify the query type
     });
@@ -87,7 +87,7 @@ const nFilasModelo = async (req, res) => {
     `;
 
   sequelize.query(query, {
-    replacements: {modeloId, offset }, // Use replacements for parameterized query
+    replacements: { modeloId, offset }, // Use replacements for parameterized query
     type: Sequelize.QueryTypes.SELECT // Specify the query type
   })
     .then(results => {
@@ -161,12 +161,11 @@ const findAllMovimientos = async (req, res) => {
 const updateMovimiento = async (req, res) => {
   try {
     const { id } = req.params;
-    const { nombre, nFactura } = req.body;
+    const {nFactura } = req.body;
     const movimiento = await Movimiento.findByPk(id);
     if (!movimiento) {
       return res.status(404).json({ error: "Movimiento no encontrado" });
     }
-    movimiento.nombre = nombre;
     movimiento.nFactura = nFactura;
     await movimiento.save();
     res.json(movimiento);
@@ -177,6 +176,9 @@ const updateMovimiento = async (req, res) => {
       .json({ error: "Error al actualizar el movimiento en la base de datos" });
   }
 };
+
+
+
 
 // Delete a movimiento by ID
 const deleteMovimiento = async (req, res) => {
@@ -238,7 +240,7 @@ const movimientosPorModelo = async (req, res) => {
     `;
 
   sequelize.query(query, {
-    replacements: {modeloId, offset }, // Use replacements for parameterized query
+    replacements: { modeloId, offset }, // Use replacements for parameterized query
     type: Sequelize.QueryTypes.SELECT // Specify the query type
   })
     .then(results => {
