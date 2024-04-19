@@ -1,5 +1,5 @@
 import express from "express";
-import { addMovimiento, findAllMovimientos, updateMovimiento, deleteMovimiento, movimientosEnFecha , nFilas, movimientosPorPlancha, imprimir} from "../controllers/movimientoController.js";
+import { addMovimiento, findAllMovimientos, updateMovimiento, deleteMovimiento, movimientosEnFecha , nFilas, movimientosPorPlancha, imprimir, movimientosPorModelo,nFilasModelo} from "../controllers/movimientoController.js";
 
 const router = express.Router();
 
@@ -13,11 +13,15 @@ router.get("/", findAllMovimientos);
 router.put("/:id", updateMovimiento);
 
 // Delete a movimiento by ID
-router.delete("/:id", deleteMovimiento);
+router.post("/eliminar/:id", deleteMovimiento);
 
 // Obtener todos los movimientos en un rango de fecha
 
 router.post("/movimientosEnFecha", movimientosEnFecha)
+
+
+router.post("/movimientosPorModelo", movimientosPorModelo)
+router.post("/movimientosPorModelo/nFilas", nFilasModelo)
 
 router.post("/nFilas", nFilas)
 

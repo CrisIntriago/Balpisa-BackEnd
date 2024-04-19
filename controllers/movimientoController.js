@@ -24,7 +24,7 @@ const imprimir = async (req, res) => {
 
 
   try {
-    const movimientosPlanchas =  await sequelize.query(queryPlanchas, {
+    const movimientosPlanchas = await sequelize.query(queryPlanchas, {
       replacements: { fechaInicio: fechaInicio + ' 00:00:00', fechaFin: fechaFin + ' 23:59:59' }, // Use replacements for parameterized query
       type: Sequelize.QueryTypes.SELECT // Specify the query type
     });
@@ -73,7 +73,6 @@ const nFilas = async (req, res) => {
     });
 
 };
-
 
 const movimientosPorPlancha = async (req, res) => {
   const { id } = req.params;
@@ -135,12 +134,11 @@ const findAllMovimientos = async (req, res) => {
 const updateMovimiento = async (req, res) => {
   try {
     const { id } = req.params;
-    const { nombre, nFactura } = req.body;
+    const {nFactura } = req.body;
     const movimiento = await Movimiento.findByPk(id);
     if (!movimiento) {
       return res.status(404).json({ error: "Movimiento no encontrado" });
     }
-    movimiento.nombre = nombre;
     movimiento.nFactura = nFactura;
     await movimiento.save();
     res.json(movimiento);
@@ -151,6 +149,9 @@ const updateMovimiento = async (req, res) => {
       .json({ error: "Error al actualizar el movimiento en la base de datos" });
   }
 };
+
+
+
 
 // Delete a movimiento by ID
 const deleteMovimiento = async (req, res) => {
@@ -169,8 +170,6 @@ const deleteMovimiento = async (req, res) => {
   }
 };
 const movimientosEnFecha = async (req, res) => {
-
-
   const { fechaInicio, fechaFin, offset } = req.body;
 
   // Parameterized query to prevent SQL injection
@@ -196,6 +195,60 @@ const movimientosEnFecha = async (req, res) => {
     });
 
 }
+const movimientosPorModelo = async (req, res) => {
+  const { modeloId, offset } = req.body;
+
+  // Parameterized query to prevent SQL injection
+  const query = `
+        SELECT mov.id, mov.createdAt as fecha,mov.tipo, b.nombre AS nombreBodega, p.nombre AS nombrePlancha, mov.valorRegistro as metraje,  mov.nFactura 
+        FROM movimientos AS mov 
+        JOIN (planchas AS p, modelos AS mo, familias AS f, bodegas AS b) ON (mov.planchaId = p.id AND mo.id = p.modeloId AND mo.familiaId = f.id AND b.id = p.bodegaId)
+        WHERE mo.id = :modeloId
+        order by mov.createdAt desc
+        LIMIT 5 OFFSET :offset;
+    `;
+
+  sequelize.query(query, {
+    replacements: { modeloId, offset }, // Use replacements for parameterized query
+    type: Sequelize.QueryTypes.SELECT // Specify the query type
+  })
+    .then(results => {
+      // Send results as JSON
+      res.status(201).json({ data: results });
+    })
+    .catch(error => {
+      console.error('Error executing raw query:', error);
+      res.status(500).json({ error: 'Error executing raw query' });
+    });
+
+};
+
+const nFilasModelo = async (req, res) => {
+
+  const { modeloId, offset } = req.body;
+
+  // Parameterized query to prevent SQL injection
+  const query = `
+        SELECT COUNT(*) AS total
+        FROM movimientos AS mov 
+        JOIN (planchas AS p, modelos AS mo, familias AS f, bodegas AS b) ON (mov.planchaId = p.id AND mo.id = p.modeloId AND mo.familiaId = f.id AND b.id = p.bodegaId)
+        WHERE mo.id = :modeloId
+        order by mov.createdAt desc
+    `;
+
+  sequelize.query(query, {
+    replacements: { modeloId, offset }, // Use replacements for parameterized query
+    type: Sequelize.QueryTypes.SELECT // Specify the query type
+  })
+    .then(results => {
+      // Send results as JSON
+      res.status(201).json({ data: results });
+    })
+    .catch(error => {
+      console.error('Error executing raw query:', error);
+      res.status(500).json({ error: 'Error executing raw query' });
+    });
+};
 
 
 
@@ -208,5 +261,7 @@ export {
   movimientosEnFecha,
   nFilas,
   movimientosPorPlancha,
-  imprimir
+  imprimir,
+  movimientosPorModelo,
+  nFilasModelo
 };

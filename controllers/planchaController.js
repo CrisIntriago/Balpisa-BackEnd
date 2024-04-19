@@ -138,12 +138,11 @@ const getPlancha = async (req, res) => {
 
     // Parameterized query to prevent SQL injection
     const query = `
-        SELECT planchas.id,planchas.nombre,alto,ancho, despunte1A, despunte1B, despunte2A, despunte2B, despunte3A, despunte3B , modelos.preciom2
+        SELECT planchas.id,planchas.nombre,alto,ancho, despunte1A, despunte1B, despunte2A, despunte2B, despunte3A, despunte3B , modelos.preciom2, estado
         FROM (planchas JOIN modelos ON (planchas.modeloId = modelos.id))
         WHERE planchas.id= :id;
         
     `;
-
     sequelize.query(query, {
         replacements: { id }, // Use replacements for parameterized query
         type: Sequelize.QueryTypes.SELECT // Specify the query type
@@ -163,7 +162,7 @@ const getPlancha = async (req, res) => {
 const updatePlancha = async (req, res) => {
     try {
         const { id } = req.params;
-        const { nombre, alto, ancho, despunte1A, despunte1B, despunte2A, despunte2B, despunte3A, despunte3B } = req.body;
+        const { nombre, alto, ancho, despunte1A, despunte1B, despunte2A, despunte2B, despunte3A, despunte3B, estado } = req.body;
         const plancha = await Plancha.findByPk(id);
         if (!plancha) {
             return res.status(404).json({ error: "Plancha no encontrada" });
@@ -177,6 +176,7 @@ const updatePlancha = async (req, res) => {
         plancha.despunte2B = despunte2B;
         plancha.despunte3A = despunte3A;
         plancha.despunte3B = despunte3B;
+        plancha.estado = estado;
 
         await plancha.save();
         res.json(plancha);
