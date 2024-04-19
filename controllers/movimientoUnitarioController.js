@@ -93,11 +93,88 @@ const movimientosEnFecha = async (req, res) => {
         });
 }
 
+const updateMovimiento = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const {nFactura } = req.body;
+      const movimiento = await MovimientoUnitario.findByPk(id);
+      if (!movimiento) {
+        return res.status(404).json({ error: "Movimiento no encontrado" });
+      }
+      movimiento.nFactura = nFactura;
+      await movimiento.save();
+      res.json(movimiento);
+    } catch (error) {
+      console.error("Error al actualizar el movimiento:", error);
+      res
+        .status(500)
+        .json({ error: "Error al actualizar el movimiento en la base de datos" });
+    }
+  };
+
+  
+  const movimientosPorModelo = async (req, res) => {
+    const { modeloId} = req.body;
+  
+    // Parameterized query to prevent SQL injection
+    const query = `
+            SELECT createdAt, tipo, cantidadCambiada, valorRegistro, nFactura 
+            FROM movimientounitarios
+            where modelounitarioId=:modeloId;
+      `;
+  
+    sequelize.query(query, {
+      replacements: { modeloId }, // Use replacements for parameterized query
+      type: Sequelize.QueryTypes.SELECT // Specify the query type
+    })
+      .then(results => {
+        // Send results as JSON
+        res.status(201).json({ data: results });
+      })
+      .catch(error => {
+        console.error('Error executing raw query:', error);
+        res.status(500).json({ error: 'Error executing raw query' });
+      });
+  
+  };
+  
+  const nFilasModelo = async (req, res) => {
+  
+    const { modeloId } = req.body;
+  
+    // Parameterized query to prevent SQL injection
+    const query = `
+          SELECT COUNT(*) AS total
+          FROM movimientos AS mov 
+          JOIN (planchas AS p, modelos AS mo, familias AS f, bodegas AS b) ON (mov.planchaId = p.id AND mo.id = p.modeloId AND mo.familiaId = f.id AND b.id = p.bodegaId)
+          WHERE mo.id = :modeloId
+          order by mov.createdAt desc
+      `;
+  
+    sequelize.query(query, {
+      replacements: { modeloId }, // Use replacements for parameterized query
+      type: Sequelize.QueryTypes.SELECT // Specify the query type
+    })
+      .then(results => {
+        // Send results as JSON
+        res.status(201).json({ data: results });
+      })
+      .catch(error => {
+        console.error('Error executing raw query:', error);
+        res.status(500).json({ error: 'Error executing raw query' });
+      });
+  };
+  
+  
+
 
 export {
     addMovimiento,
     findAllMovimientos,
     movimientosEnFecha,
     nFilas,
-    deleteMovimiento
+    deleteMovimiento,
+    updateMovimiento,
+    movimientosPorModelo,
+    nFilasModelo
 };

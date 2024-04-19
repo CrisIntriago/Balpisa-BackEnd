@@ -1,5 +1,5 @@
 import express from "express";
-import { addMovimiento, findAllMovimientos, movimientosEnFecha, nFilas, deleteMovimiento } from "../controllers/movimientoUnitarioController.js";
+import { addMovimiento, findAllMovimientos, movimientosEnFecha, nFilas, deleteMovimiento, updateMovimiento, movimientosPorModelo, nFilasModelo } from "../controllers/movimientoUnitarioController.js";
 
 const router = express.Router();
 
@@ -10,6 +10,16 @@ router.post("/", addMovimiento);
 router.get("/", findAllMovimientos);
 // Get all bodegas
 router.post("/movimientosEnFecha", movimientosEnFecha);
+
+
+router.post("/movimientosPorModelo", movimientosPorModelo)
+
+router.post("/movimientosPorModelo/nFilas", nFilasModelo)
+
+
+// modificar factura
+
+router.put("/:id", updateMovimiento);
 
 router.post("/nFilas", nFilas)
 
