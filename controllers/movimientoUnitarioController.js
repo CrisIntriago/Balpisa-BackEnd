@@ -114,17 +114,18 @@ const updateMovimiento = async (req, res) => {
 
   
   const movimientosPorModelo = async (req, res) => {
-    const { modeloId} = req.body;
+    const { modeloId, offset} = req.body;
   
     // Parameterized query to prevent SQL injection
     const query = `
             SELECT createdAt, tipo, cantidadCambiada, valorRegistro, nFactura 
             FROM movimientounitarios
-            where modelounitarioId=:modeloId;
-      `;
+            where modelounitarioId=:modeloId
+            order by createdAt desc
+            LIMIT 5 OFFSET :offset;`;
   
     sequelize.query(query, {
-      replacements: { modeloId }, // Use replacements for parameterized query
+      replacements: { modeloId, offset }, // Use replacements for parameterized query
       type: Sequelize.QueryTypes.SELECT // Specify the query type
     })
       .then(results => {
@@ -145,10 +146,8 @@ const updateMovimiento = async (req, res) => {
     // Parameterized query to prevent SQL injection
     const query = `
           SELECT COUNT(*) AS total
-          FROM movimientos AS mov 
-          JOIN (planchas AS p, modelos AS mo, familias AS f, bodegas AS b) ON (mov.planchaId = p.id AND mo.id = p.modeloId AND mo.familiaId = f.id AND b.id = p.bodegaId)
-          WHERE mo.id = :modeloId
-          order by mov.createdAt desc
+          FROM movimientounitarios
+          where modelounitarioId=:modeloId
       `;
   
     sequelize.query(query, {
