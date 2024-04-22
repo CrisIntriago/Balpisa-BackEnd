@@ -11,6 +11,8 @@ import movimientoUnitarioRoutes from "../routes/movimientoUnitarioRoutes.js";
 import { sequelize } from "../database/database.js";
 
 async function main() {
+    const port = process.env.PORT || 3000;
+
     try {
         //await sequelize.sync({ alter: true });
         console.log("La conexión a la base de datos se ha ejecutado correctamente");
