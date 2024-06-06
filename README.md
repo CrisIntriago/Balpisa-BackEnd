@@ -1,24 +1,26 @@
 # Inventory Management System for Materials Construction Company
 
-This repository is private and contains the source code for an Inventory Management System specifically designed for a materials construction company that deals in the sales of marble, granite, onyx, and other similar materials. The system encompasses complex business logic to handle various aspects of inventory management efficiently.
+**This repository is private and contains the source code for an Inventory Management System specifically designed for a materials construction company that deals in the sales of marble, granite, onyx, and other similar materials. The system encompasses complex business logic to handle various aspects of inventory management efficiently. This README is available only for the interview process.**
 
 ## Overview
 
-The Inventory Management System aims to streamline and automate the process of managing inventory for construction materials. It provides functionalities to track stock levels, manage orders, and generate reports, ensuring that the company can operate smoothly and meet customer demands without overstocking or running out of critical materials.
+The Inventory Management System is designed to keep track of the available square meters (m²) of slabs with complex logic due to their varying shapes and sizes, custom requirements, and processes. It manages the entrance and exit of materials and keeps a detailed record of transactions for auditing purposes. By providing real-time data on available m² of slabs, the system helps in closing deals faster and increasing sales efficiency. The system aims to streamline and automate inventory management for construction materials, ensuring efficient operation and customer satisfaction.
 
 ## Features
 
-- **Inventory Tracking:** Maintain real-time data on stock levels for all materials.
-- **Order Management:** Handle customer orders, including order placement, processing, and fulfillment.
-- **Supplier Management:** Manage information and transactions with suppliers.
-- **Reporting:** Generate various reports to provide insights into inventory status, sales trends, and supplier performance.
-- **User Roles and Permissions:** Different user roles with specific permissions to ensure security and efficient workflow.
+- **Inventory Tracking:** Maintain real-time data on available square meters (m²) of slabs with different shapes and sizes.
+- **Order Management:** Handle customer orders, including placement, processing, and fulfillment of custom requirements.
+- **Material Flow Management:** Track the entrance and exit of materials to maintain accurate inventory records.
+- **Transaction Auditing:** Keep detailed records of all transactions for auditing and compliance purposes.
+- **Reporting:** Generate various reports to provide insights into inventory status, sales trends, and performance.
+- **User Roles and Permissions:** Implement different user roles with specific permissions to ensure security and efficient workflow.
 
 ## Technology Stack
 
 - **Backend:** Node.js, Express.js
 - **ORM:** Sequelize
 - **Database:** MySQL
+
 
 ## ERD Diagram
 
