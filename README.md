@@ -1,4 +1,4 @@
-# Inventory Management System for Materials Construction Company
+# REST API for Inventory Management System for Materials Construction Company
 
 **This repository is private and contains the source code for an Inventory Management System specifically designed for a materials construction company that deals in the sales of marble, granite, onyx, and other similar materials. The system encompasses complex business logic to handle various aspects of inventory management efficiently. This README is available only for the interview process.**
 
