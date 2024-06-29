@@ -209,7 +209,7 @@ const movimientosPorModelo = async (req, res) => {
 
   // Si el offset está presente, agregar la cláusula OFFSET a la consulta
   const replacements = { modeloId };
-  if (offset) {
+  if (offset !== -1) {
     query += 'LIMIT 5 OFFSET :offset';
     replacements.offset = offset;
   }

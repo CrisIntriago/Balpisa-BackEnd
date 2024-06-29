@@ -127,7 +127,7 @@ const updateMovimiento = async (req, res) => {
     const replacements = { modeloId };
   
     // Agregar la cláusula OFFSET si offset está presente
-    if (offset !== undefined) {
+    if (offset !== -1) {
       query += 'LIMIT 5 OFFSET :offset';
       replacements.offset = offset;
     }
