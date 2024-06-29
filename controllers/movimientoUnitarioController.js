@@ -112,32 +112,39 @@ const updateMovimiento = async (req, res) => {
     }
   };
 
-  
   const movimientosPorModelo = async (req, res) => {
-    const { modeloId, offset} = req.body;
+    const { modeloId, offset } = req.body;
   
-    // Parameterized query to prevent SQL injection
-    const query = `
-            SELECT createdAt, tipo, cantidadCambiada, valorRegistro, nFactura 
-            FROM movimientounitarios
-            where modelounitarioId=:modeloId
-            order by createdAt desc
-            LIMIT 5 OFFSET :offset;`;
+    // Construir la consulta dinámicamente según si el offset está presente o no
+    let query = `
+          SELECT createdAt, tipo, cantidadCambiada, valorRegistro, nFactura 
+          FROM movimientounitarios
+          WHERE modelounitarioId = :modeloId
+          ORDER BY createdAt DESC
+      `;
   
-    sequelize.query(query, {
-      replacements: { modeloId, offset }, // Use replacements for parameterized query
-      type: Sequelize.QueryTypes.SELECT // Specify the query type
-    })
-      .then(results => {
-        // Send results as JSON
-        res.status(201).json({ data: results });
-      })
-      .catch(error => {
-        console.error('Error executing raw query:', error);
-        res.status(500).json({ error: 'Error executing raw query' });
+    // Definir replacements
+    const replacements = { modeloId };
+  
+    // Agregar la cláusula OFFSET si offset está presente
+    if (offset !== undefined) {
+      query += 'LIMIT 5 OFFSET :offset';
+      replacements.offset = offset;
+    }
+  
+    try {
+      const results = await sequelize.query(query, {
+        replacements, // Usar replacements para la query parametrizada
+        type: Sequelize.QueryTypes.SELECT // Especificar el tipo de query
       });
-  
+      // Enviar resultados como JSON
+      res.status(201).json({ data: results });
+    } catch (error) {
+      console.error('Error ejecutando la query:', error);
+      res.status(500).json({ error: 'Error ejecutando la query' });
+    }
   };
+  
   
   const nFilasModelo = async (req, res) => {
   

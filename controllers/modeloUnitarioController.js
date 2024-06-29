@@ -59,30 +59,47 @@ const getModelosFromFamilia = async (req, res) => {
 }
 
 const getModelosM2FromFamilia = async (req, res) => {
+    const { familiaId, modeloId } = req.body;
 
-    const { familiaId } = req.body;
-
-    // Parameterized query to prevent SQL injection
-    const query = `
-        SELECT modelounitarios.id,  modelounitarios.nombre, sum(cantidad) as unidades , sum(cantidad)*modelounitarios.m2PorUnidad as m2Disponibles, modelounitarios.precio as preciom2 FROM cantidadenbodegas JOIN modelounitarios ON (modelounitarios.id = cantidadenbodegas.modelounitarioId) JOIN bodegas ON (bodegas.id = cantidadenbodegas.bodegaId) JOIN  familias ON (familias.id = modelounitarios.familiaId)
-        WHERE familias.id= :familiaId
-        group by modelounitarios.id;
+    // Base query
+    let query = `
+        SELECT modelounitarios.id, modelounitarios.nombre, SUM(cantidad) AS unidades, 
+               SUM(cantidad) * modelounitarios.m2PorUnidad AS m2Disponibles, 
+               modelounitarios.precio AS preciom2 
+        FROM cantidadenbodegas 
+        JOIN modelounitarios ON (modelounitarios.id = cantidadenbodegas.modelounitarioId) 
+        JOIN bodegas ON (bodegas.id = cantidadenbodegas.bodegaId) 
+        JOIN familias ON (familias.id = modelounitarios.familiaId)
+        WHERE familias.id = :familiaId
     `;
 
-    sequelize.query(query, {
-        replacements: { familiaId }, // Use replacements for parameterized query
-        type: Sequelize.QueryTypes.SELECT // Specify the query type
-    })
-        .then(results => {
-            // Send results as JSON
-            res.status(201).json({ data: results });
-        })
-        .catch(error => {
-            console.error('Error executing raw query:', error);
-            res.status(500).json({ error: 'Error executing raw query' });
+    // Add additional condition if modeloId is provided
+    if (modeloId) {
+        query += ` AND modelounitarios.id = :modeloId`;
+    }
+
+    query += ` GROUP BY modelounitarios.id;`;
+
+    // Prepare replacements object
+    const replacements = { familiaId };
+    if (modeloId) {
+        replacements.modeloId = modeloId;
+    }
+
+    try {
+        const results = await sequelize.query(query, {
+            replacements: replacements, // Use replacements for parameterized query
+            type: Sequelize.QueryTypes.SELECT // Specify the query type
         });
 
+        // Send results as JSON
+        res.status(201).json({ data: results });
+    } catch (error) {
+        console.error('Error executing raw query:', error);
+        res.status(500).json({ error: 'Error executing raw query' });
+    }
 };
+
 
 const getCantidadXBodega = async (req, res) => {
     const { modeloId } = req.params;

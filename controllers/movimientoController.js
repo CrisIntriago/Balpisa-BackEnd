@@ -198,30 +198,37 @@ const movimientosEnFecha = async (req, res) => {
 const movimientosPorModelo = async (req, res) => {
   const { modeloId, offset } = req.body;
 
-  // Parameterized query to prevent SQL injection
-  const query = `
-        SELECT mov.id, mov.createdAt as fecha,mov.tipo, b.nombre AS nombreBodega, p.nombre AS nombrePlancha, mov.valorRegistro as metraje,  mov.nFactura 
+  // Construir la consulta dinámicamente según si el offset está presente o no
+  let query = `
+        SELECT mov.id, mov.createdAt as fecha, mov.tipo, b.nombre AS nombreBodega, p.nombre AS nombrePlancha, mov.valorRegistro as metraje, mov.nFactura 
         FROM movimientos AS mov 
         JOIN (planchas AS p, modelos AS mo, familias AS f, bodegas AS b) ON (mov.planchaId = p.id AND mo.id = p.modeloId AND mo.familiaId = f.id AND b.id = p.bodegaId)
         WHERE mo.id = :modeloId
-        order by mov.createdAt desc
-        LIMIT 5 OFFSET :offset;
+        ORDER BY mov.createdAt DESC
     `;
 
-  sequelize.query(query, {
-    replacements: { modeloId, offset }, // Use replacements for parameterized query
-    type: Sequelize.QueryTypes.SELECT // Specify the query type
-  })
-    .then(results => {
-      // Send results as JSON
-      res.status(201).json({ data: results });
-    })
-    .catch(error => {
-      console.error('Error executing raw query:', error);
-      res.status(500).json({ error: 'Error executing raw query' });
-    });
+  // Si el offset está presente, agregar la cláusula OFFSET a la consulta
+  const replacements = { modeloId };
+  if (offset) {
+    query += 'LIMIT 5 OFFSET :offset';
+    replacements.offset = offset;
+  }
 
+  console.log(query);
+
+  try {
+    const results = await sequelize.query(query, {
+      replacements, // Usar replacements para la query parametrizada
+      type: Sequelize.QueryTypes.SELECT // Especificar el tipo de query
+    });
+    // Enviar resultados como JSON
+    res.status(201).json({ data: results });
+  } catch (error) {
+    console.error('Error ejecutando la query:', error);
+    res.status(500).json({ error: 'Error ejecutando la query' });
+  }
 };
+
 
 const nFilasModelo = async (req, res) => {
 

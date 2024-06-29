@@ -1,6 +1,6 @@
 import { Modelo } from "../models/Relaciones.js";
 import { sequelize } from "../database/database.js";
-import Sequelize from "sequelize";
+import Sequelize, { QueryTypes } from "sequelize";
 
 const getModelosFromFamilia = async (req, res) => {
 
@@ -31,32 +31,44 @@ const getModelosFromFamilia = async (req, res) => {
 }
 
 const getModelosM2FromFamilia = async (req, res) => {
+    const { familiaId, modeloId } = req.body;
 
-    const { familiaId } = req.body;
-
-    // Parameterized query to prevent SQL injection
-    const query = `
-        SELECT modelos.id ,modelos.nombre, SUM(planchas.alto * planchas.ancho) AS m2Disponibles, modelos.preciom2
-        FROM (modelos
-        JOIN (planchas, familias) ON (modelos.id = planchas.ModeloId and familias.id = modelos.FamiliaId))
+    // Base query
+    let query = `
+        SELECT modelos.id, modelos.nombre, SUM(planchas.alto * planchas.ancho) AS m2Disponibles, modelos.preciom2
+        FROM modelos
+        JOIN planchas ON modelos.id = planchas.ModeloId
+        JOIN familias ON familias.id = modelos.FamiliaId
         WHERE familias.id = :familiaId
-        GROUP BY modelos.id;
-    
     `;
 
-    sequelize.query(query, {
-        replacements: { familiaId }, // Use replacements for parameterized query
-        type: Sequelize.QueryTypes.SELECT // Specify the query type
-    })
-        .then(results => {
-            // Send results as JSON
-            res.status(201).json({ data: results });
-        })
-        .catch(error => {
-            console.error('Error executing raw query:', error);
-            res.status(500).json({ error: 'Error executing raw query' });
+    // Check if modeloId is provided
+    if (modeloId) {
+        query += ' AND modelos.id = :modeloId';
+    }
+
+    query += ' GROUP BY modelos.id;';
+
+    try {
+        const replacements = { familiaId };
+        if (modeloId) {
+            replacements.modeloId = modeloId;
+        }
+
+        const results = await sequelize.query(query, {
+            replacements: replacements, // Use replacements for parameterized query
+            type: QueryTypes.SELECT // Specify the query type
         });
-}
+
+        // Send results as JSON
+        res.status(200).json({ data: results });
+    } catch (error) {
+        console.error('Error executing raw query:', error);
+        res.status(500).json({ error: 'Error executing raw query' });
+    }
+};
+
+
 
 const allPlanchas = async (req, res) => {
     const { modeloId, bodegaId } = req.query;
