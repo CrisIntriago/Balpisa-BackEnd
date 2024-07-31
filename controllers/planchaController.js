@@ -58,13 +58,12 @@ const getIdNombres = async (req, res) => {
 
 const getIdNombresDisponibles = async (req, res) => {
     const { modeloId, bodegaId, estado } = req.query;
-
     const replacements = { modeloId, estado };
 
     let query = `
-        SELECT id, nombre FROM planchas 
+        SELECT id, nombre FROM planchas
         WHERE modeloId = :modeloId 
-        AND estado = :estado
+        AND estado = 1
     `;
 
     if (bodegaId) {
